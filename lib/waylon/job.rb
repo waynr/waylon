@@ -1,3 +1,4 @@
+require 'waylon/errors'
 class Waylon
   class Job
 
@@ -14,6 +15,9 @@ class Waylon
 
     def query!
       @job_details = client.job.list_details(@name)
+      self
+    rescue JenkinsApi::Exceptions::NotFound
+      raise Waylon::Errors::NotFound
     end
 
     def status
@@ -39,9 +43,6 @@ class Waylon
                   run_pct
                 end
         accum
-      end.tap do |x|
-        require 'pry'
-        binding.pry if x.nil?
       end
     rescue JenkinsApi::Exceptions::InternalServerError
       -1
@@ -69,5 +70,42 @@ class Waylon
     def last_build_num
       job_details['lastBuild']['number']
     end
+
+    def to_hash
+      {
+        'name'    => @name,
+        'url'     => @job_details['url'],
+        'status'  => status,
+        'health'  => @job_details['healthReport'][0]['score'],
+        'weather' => weather(@job_details['healthReport'][0]['score']),
+      }
+    end
+
+    private
+
+    # weather() returns an img src, alt, and title, based on build stability
+    def weather(score)
+      case score.to_i
+      when 100
+        {
+          'src' => '/img/sun.png',
+          'alt' => '[sun]',
+          'title' => 'No recent builds failed'
+        }
+      when 80
+        {
+          'src' => '/img/cloud.png',
+          'alt' => '[cloud]',
+          'title' => '1 of the last 5 builds failed'
+        }
+      else
+        {
+          'src' => '/img/umbrella.png',
+          'alt' => '[umbrella]',
+          'title' => '2 or more of the last 5 builds failed'
+        }
+      end
+    end
+
   end
 end

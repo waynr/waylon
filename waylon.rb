@@ -3,12 +3,14 @@ require 'cgi'
 require 'date'
 require 'jenkins_api_client'
 require 'yaml'
+require 'deterministic'
 
 $LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
 
 
 class Waylon < Sinatra::Application
   require 'waylon/root_config'
+  include Deterministic
 
   helpers do
     def h(text)
@@ -50,6 +52,18 @@ class Waylon < Sinatra::Application
         }
       end
     end
+
+    def manadic(monad)
+      if monad.success?
+        status 200
+        body(monad.value.to_json)
+      elsif monad.value.is_a? Waylon::Errors::NotFound
+        status 404
+        body({"errors" => [monad.value.message]}.to_json)
+      else
+        raise monad.value
+      end
+    end
   end
 
   # Landing page (`/`)
@@ -79,6 +93,13 @@ class Waylon < Sinatra::Application
 
     erb :base do
       erb :view
+    end
+  end
+
+  get '/x/:name' do
+    @view_name = CGI.unescape(params[:name])
+    erb :base do
+      erb :x
     end
   end
 
@@ -158,6 +179,50 @@ class Waylon < Sinatra::Application
     end
 
     erb :data
+  end
+
+  get '/api/view/:view.json' do
+    view_name = CGI.unescape(params[:view])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.to_config }
+    end)
+  end
+
+  get '/api/view/:view/server/:server.json' do
+    view_name = CGI.unescape(params[:view])
+    server_name = CGI.unescape(params[:server])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.server(server_name) }
+      try { |server| server.to_config }
+    end)
+  end
+
+  get '/api/view/:view/server/:server/jobs.json' do
+    view_name = CGI.unescape(params[:view])
+    server_name = CGI.unescape(params[:server])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.server(server_name) }
+      try { |server| server.jobs.map(&:name) }
+    end)
+  end
+
+  get '/api/view/:view/server/:server/job/:job.json' do
+    view_name   = CGI.unescape(params[:view])
+    server_name = CGI.unescape(params[:server])
+    job_name    = CGI.unescape(params[:job])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.server(server_name) }
+      try { |server| server.job(job_name) }
+      try { |job| job.query!.to_hash }
+    end)
   end
 
   # Investigate a failed build

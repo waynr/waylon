@@ -1,4 +1,5 @@
 require 'jenkins_api_client'
+require 'waylon/errors'
 
 class Waylon
   class Server
@@ -39,6 +40,20 @@ class Waylon
 
     def verify_client!
       @client.get_root  # Attempt a connection to `server`
+    end
+
+    def to_config
+      {
+        'name' => @name,
+        'url'  => @url,
+        'jobs' => @jobs.map(&:name)
+      }
+    end
+
+    def job(name)
+      @jobs.find { |job| job.name == name }.tap do |x|
+        raise Waylon::Errors::NotFound, "Cannot find job named #{name}" if x.nil?
+      end
     end
   end
 end
