@@ -94,7 +94,7 @@ body {
 .building-job a, .failed-job a, .successful-job a, .unknown-job a {
     color: white;
 }
-.unknown-job    { background-color: #88a6af; }
+.unknown-job    { background-color: #428bca; }
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
 .successful-job { background-color: #5cb85c; }

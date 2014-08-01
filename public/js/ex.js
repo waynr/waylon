@@ -108,8 +108,38 @@ var ex = {
                     e.attr("status", stat);
                 }
                 ex.sortTable();
+                ex.updateStatsRollup();
             }
         });
+    },
+
+    updateStatsRollup: function() {
+        'use strict';
+
+        var failed = 0, building = 0, unknown = 0, successful = 0;
+
+        ex.eachJob(function(tr) {
+            switch($(tr).attr("status")) {
+                case "failed-job":
+                    failed += 1;
+                    break;
+                case "building-job":
+                    building += 1;
+                    break;
+                case "unknown-job":
+                    unknown += 1;
+                    break;
+                case "successful-job":
+                    successful += 1;
+                    break;
+            }
+        });
+
+        $("#successful-jobs").text(successful);
+        $("#unknown-jobs").text(unknown);
+        $("#building-jobs").text(building);
+        $("#failed-jobs").text(failed);
+        $("#total-jobs").text(failed + building + unknown + successful);
     },
 
     sortTable: function() {
@@ -144,6 +174,15 @@ var ex = {
             default:
                 return -1;
         }
+    },
 
-    }
+    eachJob: function(callback) {
+        'use strict';
+
+        var children = $("#jobs tbody").children();
+
+        $.each(children, function(i, elem) {
+            callback(elem);
+        });
+    },
 };
