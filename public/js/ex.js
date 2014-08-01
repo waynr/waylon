@@ -35,6 +35,9 @@ var ex = {
 
         setup: function() {
             ex.view.config.tbody = $("#jobs tbody");
+            $(document).ajaxStop(function() {
+                ex.view.sort();
+            });
         },
 
         rebuild: function() {
@@ -231,7 +234,7 @@ var ex = {
             }
 
             ex.view.updateStatsRollup();
-            ex.view.sort();
+            //ex.view.sort();
         },
 
         queryUrl: function(viewname, servername, jobname) {
