@@ -76,6 +76,12 @@ var ex = {
             success: function(json) {
                 e.empty();
 
+                var img = $("<img>");
+                img.attr("class", "weather");
+                img.attr("src", json["weather"]["src"]);
+                img.attr("alt", json["weather"]["alt"]);
+                img.attr("title", json["weather"]["title"]);
+
                 var link = $("<a>").attr("href", json["url"]).text(job);
 
                 var stat;
@@ -90,8 +96,9 @@ var ex = {
                         stat = "successful-job";
                 }
 
+
                 e.append(
-                    $("<td>").html(link),
+                    $("<td>").append(img, link),
                     $("<td>").text(json["status"])
                 );
 
