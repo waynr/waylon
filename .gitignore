@@ -2,3 +2,4 @@
 *.swp
 logs/
 config/waylon.yml
+Gemfile.lock
