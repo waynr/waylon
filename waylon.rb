@@ -4,7 +4,12 @@ require 'date'
 require 'jenkins_api_client'
 require 'yaml'
 
+$LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
+
+
 class Waylon < Sinatra::Application
+  require 'waylon/root_config'
+
   helpers do
     def h(text)
       CGI::escape(text)
@@ -13,19 +18,13 @@ class Waylon < Sinatra::Application
     # get_views() does just that, gets a list of views from
     # the config file and returns an array of strings.
     def get_views()
-      config = load_config()
-      views = []
-      config['views'].each do |view|
-        views += view.keys
-      end
-      return views
+      gen_config.views.map(&:name)
     end
 
-    # load_config() opens config/waylon.yml, parses it, and returns
-    def load_config()
+    def gen_config
       root = File.dirname(__FILE__)
       config = YAML.load_file(File.join(root, 'config/waylon.yml'))
-      return config
+      Waylon::RootConfig.from_hash(config)
     end
 
     # weather() returns an img src, alt, and title, based on build stability
@@ -68,11 +67,15 @@ class Waylon < Sinatra::Application
   # in the ERB templates for `view/foo` should be _just enough_ to refresh
   # the contents of <div class="waylon container"> with the latest data.
   get '/view/:name' do
+    config = gen_config
     @this_view = CGI.unescape(params[:name])
-    config = load_config()
+    @refresh_interval = config.app_config.refresh_interval
 
-    # Refresh the page every `refresh_interval` seconds.
-    @refresh_interval = config['config'][0]['refresh_interval'].to_i
+    view_config = config.views.find { |view| view.name == @this_view }
+
+    if view_config.nil?
+      @errors = [ "Couldn't find view #{@this_view}!"]
+    end
 
     erb :base do
       erb :view
@@ -85,7 +88,6 @@ class Waylon < Sinatra::Application
   # HTML table for the jQuery in '/view/:name' to load and display.
   get '/view/:name/data' do
     @this_view = CGI.unescape(params[:name])
-    config = load_config()
 
     # For each Jenkins instance in a view, connect to the server, and get the
     # status of the jobs specified in the config. Append job details to each
@@ -98,114 +100,59 @@ class Waylon < Sinatra::Application
     @job_progress    = []
     @successful_jobs = []
 
-    config['views'].select { |h| h[@this_view] }[0].each do |_, servers|
-      servers.each do |hash|
-        hash.keys.each do |server|
+    view_config = gen_config.views.find { |view| view.name == @this_view }
 
-          # This is wrapped inside a block to ensure that we display an error
-          # if the user has an improperly-formatted YAML file. That is, they
-          # have omitted 'username', 'password' or both. If that's the case,
-          # a NoMethodError will be raised.
-          begin
-            username = hash[server].select { |h| h['username'] }[0]['username']
-            password = hash[server].select { |h| h['password'] }[0]['password']
+    if view_config.nil?
+      @errors << "Couldn't find view #{@this_view}!"
+      halt 404
+    end
 
-            if(!username.empty? and !password.empty?)
-              client = JenkinsApi::Client.new(
-                :server_url => server,
-                :username   => username,
-                :password   => password,
-              )
-            else
-              @errors << "No credentials provided for server: #{server}"
-              next
-            end
-          rescue NoMethodError
-            @errors << "No credentials provided for server: #{server}"
-            next
-          end
 
-          begin
-            client.get_root  # Attempt a connection to `server`
-          rescue SocketError
-            @errors << "Unable to connect to server: #{server}"
-            next
-          rescue Errno::ETIMEDOUT
-            @errors << "Timed out while connecting to server: #{server}"
-            next
-          end
+    view_config.servers.each do |server|
+      begin
+        server.verify_client!
+      rescue SocketError
+        @errors << "Unable to connect to server: #{server}"
+        next
+      rescue Errno::ETIMEDOUT
+        @errors << "Timed out while connecting to server: #{server}"
+        next
+      end
 
-          hash[server].select { |h| h['jobs'] }[0]['jobs'].each do |job|
+      server.jobs.each do |job|
 
-            # jenkins_api_client won't throw an Unauthorized exception until
-            # we really try doing something, like calling list_details()
-            begin
-              job_details = client.job.list_details(job)
-            rescue JenkinsApi::Exceptions::Unauthorized
-              @errors << "Incorrect username or password for server: #{server}"
-              break
-            rescue JenkinsApi::Exceptions::NotFound
-              @warnings << "Non-existent job \"#{job}\" on server #{server}"
-              next
-            end
+        # jenkins_api_client won't throw an Unauthorized exception until
+        # we really try doing something, like calling list_details()
+        begin
+          job.query!
+          job_details = job.job_details
+        rescue JenkinsApi::Exceptions::Unauthorized
+          @errors << "Incorrect username or password for server: #{server.url}"
+          break
+        rescue JenkinsApi::Exceptions::NotFound
+          @warnings << "Non-existent job \"#{job.name}\" on server #{server.url}"
+          next
+        end
 
-            case client.job.color_to_status(job_details['color'])
-            when 'running'
-              @building_jobs << job_details
+        case job.status
+        when 'running'
+          @building_jobs << job_details
 
-              # The values we need for getting progress and estimating time
-              # remaining aren't available in jenkins_api_client's methods.
-              # Luckily, api_get_request() is public and we can re-use our
-              # existing connection.
-              est_duration = client.api_get_request("/job/#{job}/lastBuild", nil, "/api/json?depth=2&tree=estimatedDuration")['estimatedDuration']
+          @job_progress << {
+            'job_name'     => job.name,
+            'progress_pct' => job.progress_pct,
+            'eta'          => job.eta
+          }
+        when 'failure'
+          @failed_jobs << job_details
 
-              progress_pct = String.new
-              begin
-                client.api_get_request("/job/#{job}/lastBuild", nil, "/api/json?depth=3")['runs'].each do |run|
-                  progress_pct = run['executor']['progress']
-                end
-                # A build's 'duration' in the Jenkins API is only available
-                # after it has completed. Using estimatedDuration and the
-                # executor progress (in percentage), we can calculate the ETA.
-                # Note that estimatedDuration is returned in ms and here we
-                # convert it to seconds.
-                eta = (est_duration - (est_duration * (progress_pct / 100.0))) / 1000
-              rescue NoMethodError
-                # the build is stuck, or something horrible happened
-                progress_pct = -1
-                eta          = -1
-              ensure
-                @job_progress << {
-                  'job_name'     => job,
-                  'progress_pct' => progress_pct,
-                  'eta'          => eta
-                }
-                next
-              end
-            when 'failure'
-              @failed_jobs << job_details
-
-              # We already know the job is in 'failed' state. Using the build
-              # description (or lack thereof), build an array of hashes to
-              # determine if the failed job is already under investigation.
-              last_build_num = job_details['lastBuild']['number']
-              last_build_descr = client.job.get_build_details(job, last_build_num)['description']
-
-              if(last_build_descr =~ /under investigation/i)
-                is_under_investigation = true
-              else
-                is_under_investigation = false
-              end
-
-              @failed_builds << {
-                'job_name'               => job,
-                'build_number'           => last_build_num,
-                'is_under_investigation' => is_under_investigation,
-              }
-            when 'success'
-              @successful_jobs << job_details
-            end
-          end
+          @failed_builds << {
+            'job_name'               => job.name,
+            'build_number'           => job.last_build_num,
+            'is_under_investigation' => job.under_investigation?
+          }
+        when 'success'
+          @successful_jobs << job_details
         end
       end
     end
@@ -216,7 +163,6 @@ class Waylon < Sinatra::Application
   # Investigate a failed build
   #
   get '/view/:view/:server/:job/:build/investigate' do
-    view     = CGI.unescape(params[:view])
     server   = CGI.unescape(params[:server])
     job      = CGI.unescape(params[:job])
     build    = CGI.unescape(params[:build])
@@ -227,24 +173,22 @@ class Waylon < Sinatra::Application
     # the hostname, to keep the server's full URL (and all its special chars)
     # out of the URI visible to the user. This whole thing is a hack and should
     # be improved someday.
-    config = load_config()
-    config['views'].select { |h| h[view] }[0].values.flatten.each do |hash|
-      hash.keys.each do |server_url|
-        if(server_url =~ /#{server}/)
-            username = hash[server_url].select { |h| h['username'] }[0]['username']
-            password = hash[server_url].select { |h| h['password'] }[0]['password']
-
-            if(!username.empty? and !password.empty?)
-              client = JenkinsApi::Client.new(
-                :server_url => server_url,
-                :username   => username,
-                :password   => password,
-              )
-            end
-            client.api_post_request("#{prefix}/submitDescription", postdata)
-            redirect "#{server_url}/#{prefix}/"
+    gen_config.views.each do |view|
+      view.servers.each do |config_server|
+        if config_server.url =~ /#{server}/
+          config_server.client.api_post_request("#{prefix}/submitDescription", postdata)
+          redirect "#{config_server.url}/#{prefix}/"
         end
       end
+    end
+
+    @errors = []
+    @errors << "We couldn't find a server in our config for #{server}!"
+
+    @this_view = 'index'
+
+    erb :base do
+      erb :index
     end
   end
 end
