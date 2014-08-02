@@ -190,6 +190,15 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  get '/api/view/:view/servers.json' do
+    view_name = CGI.unescape(params[:view])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.servers.map(&:name) }
+    end)
+  end
+
   get '/api/view/:view/server/:server.json' do
     view_name = CGI.unescape(params[:view])
     server_name = CGI.unescape(params[:server])
