@@ -29,21 +29,22 @@ self-explanatory, but here's an example for a few of
 ```yaml
 ---
 config:
-    - refresh_interval: 60  # page refresh interval (in seconds)
+  refresh_interval: 30  # page refresh interval (in seconds)
 views:
-    - 'Puppet Labs - FOSS':
-        - https://jenkins.puppetlabs.com:
-            - username: 'YOUR_USERNAME'
-            - password: 'YOUR_PASSWORD'
-            - jobs:
-                - 'Puppet-Specs-master'
-                - 'Facter-Specs-master'
-                - 'Hiera-Specs-master'
+  'Puppet Labs - FOSS':
+    'pl-jenkins':
+      url: 'https://jenkins.puppetlabs.com'
+      username: 'waylon'
+      password: 'topsecret'
+      jobs:
+        - 'Puppet-Specs-master'
+        - 'Facter-Specs-master'
+        - 'Hiera-Specs-master'
 ```
 
 ## Deploy
 You can deploy locally, on your LAN, or if you have a public Jenkins instance,
-or push the whole thing to Heroku.
+push the whole thing to Heroku.
 
 For development, running `rackup` will launch the app with WEBrick on port 9292:
 
