@@ -25,38 +25,30 @@ class Waylon
     end
 
     def est_duration
-      # The values we need for getting progress and estimating time
-      # remaining aren't available in jenkins_api_client's methods.
-      # Luckily, api_get_request() is public and we can re-use our
-      # existing connection.
-      @client.api_get_request("/job/#{@name}/lastBuild", nil, "/api/json?depth=2&tree=estimatedDuration")['estimatedDuration']
+      # estimatedDuration is returned in ms and here we convert it to seconds
+      client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=estimatedDuration')['estimatedDuration'] / 1000
     end
 
     def progress_pct
-      last_build = client.api_get_request("/job/#{@name}/lastBuild", nil, "/api/json?depth=3")
-      last_build['runs'].inject(0.0) do |accum, run|
-        run_pct = (run['executor'] || {})['progress']
-
-        accum = if run_pct == -1
-                  -1
-                elsif run_pct > accum
-                  run_pct
-                end
-        accum
-      end
+      # Note that 'timestamp' available the Jenkins API is returned in ms
+      start_time = client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=timestamp')['timestamp'] / 1000.0
+      progress_pct = ((Time.now.to_i - start_time) / est_duration) * 100
+      return progress_pct.floor
     rescue JenkinsApi::Exceptions::InternalServerError
       -1
     end
 
     def eta
-      ## A build's 'duration' in the Jenkins API is only available
-      ## after it has completed. Using estimatedDuration and the
-      ## executor progress (in percentage), we can calculate the ETA.
-      ## Note that estimatedDuration is returned in ms and here we
-      ## convert it to seconds.
-
-      #eta = (est_duration - (est_duration * (progress_pct / 100.0))) / 1000
-      -1
+      # A build's 'duration' in the Jenkins API is only available
+      # after it has completed. Using estimatedDuration and the
+      # executor progress (in percentage), we can calculate the ETA.
+      if progress_pct != -1 then
+        t = (est_duration - (est_duration * (progress_pct / 100.0)))
+        mm, ss = t.divmod(60)
+        return "#{mm}m #{ss.floor}s"
+      else
+        -1
+      end
     end
 
     def under_investigation?
@@ -73,12 +65,14 @@ class Waylon
 
     def to_hash
       {
-        'name'    => @name,
-        'url'     => @job_details['url'],
-        'status'  => status,
-        'health'  => @job_details['healthReport'][0]['score'],
-        'weather' => weather(@job_details['healthReport'][0]['score']),
-      }
+        'name'         => @name,
+        'url'          => @job_details['url'],
+        'status'       => status,
+        'progress_pct' => (progress_pct if status == 'running'),
+        'eta'          => (eta if status == 'running'),
+        'health'       => @job_details['healthReport'][0]['score'],
+        'weather'      => weather(@job_details['healthReport'][0]['score']),
+      }.reject{ |k, v| v.nil? }
     end
 
     private
