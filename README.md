@@ -29,7 +29,8 @@ self-explanatory, but here's an example for a few of
 ```yaml
 ---
 config:
-  refresh_interval: 30  # page refresh interval (in seconds)
+  refresh_interval: 30   # polling interval (in seconds)
+  rebuild_interval: 3600 # page redraw interval (in seconds)
 views:
   'Puppet Labs - FOSS':
     'pl-jenkins':

@@ -69,116 +69,18 @@ class Waylon < Sinatra::Application
   # Landing page (`/`)
   # Print a list of views available on this Waylon instance.
   get '/' do
-    @this_view = 'index'
+    @view_name = 'index'
 
     erb :base do
       erb :index
     end
   end
 
-  # Individual views (`/view/foo`)
-  # These are the pages the user actually interacts with. Code here and
-  # in the ERB templates for `view/foo` should be _just enough_ to refresh
-  # the contents of <div class="waylon container"> with the latest data.
   get '/view/:name' do
-    config = gen_config
-    @this_view = CGI.unescape(params[:name])
-    @refresh_interval = config.app_config.refresh_interval
-
-    view_config = config.views.find { |view| view.name == @this_view }
-
-    if view_config.nil?
-      @errors = [ "Couldn't find view #{@this_view}!"]
-    end
-
+    @view_name = CGI.unescape(params[:name])
     erb :base do
       erb :view
     end
-  end
-
-  get '/x/:name' do
-    @view_name = CGI.unescape(params[:name])
-    erb :base do
-      erb :x
-    end
-  end
-
-  # Individual views' data (`/view/foo/data`)
-  # When navigating to 'view/foo/data', queries config/waylon.yml for that
-  # view's config (servers to connect to, and jobs to display). Returns an
-  # HTML table for the jQuery in '/view/:name' to load and display.
-  get '/view/:name/data' do
-    @this_view = CGI.unescape(params[:name])
-
-    # For each Jenkins instance in a view, connect to the server, and get the
-    # status of the jobs specified in the config. Append job details to each
-    # applicable array: successful, failed, and building.
-    @errors          = []
-    @warnings        = []
-    @failed_jobs     = []
-    @failed_builds   = []
-    @building_jobs   = []
-    @job_progress    = []
-    @successful_jobs = []
-
-    view_config = gen_config.views.find { |view| view.name == @this_view }
-
-    if view_config.nil?
-      @errors << "Couldn't find view #{@this_view}!"
-      halt 404
-    end
-
-
-    view_config.servers.each do |server|
-      begin
-        server.verify_client!
-      rescue SocketError
-        @errors << "Unable to connect to server: #{server}"
-        next
-      rescue Errno::ETIMEDOUT
-        @errors << "Timed out while connecting to server: #{server}"
-        next
-      end
-
-      server.jobs.each do |job|
-
-        # jenkins_api_client won't throw an Unauthorized exception until
-        # we really try doing something, like calling list_details()
-        begin
-          job.query!
-          job_details = job.job_details
-        rescue JenkinsApi::Exceptions::Unauthorized
-          @errors << "Incorrect username or password for server: #{server.url}"
-          break
-        rescue JenkinsApi::Exceptions::NotFound
-          @warnings << "Non-existent job \"#{job.name}\" on server #{server.url}"
-          next
-        end
-
-        case job.status
-        when 'running'
-          @building_jobs << job_details
-
-          @job_progress << {
-            'job_name'     => job.name,
-            'progress_pct' => job.progress_pct,
-            'eta'          => job.eta
-          }
-        when 'failure'
-          @failed_jobs << job_details
-
-          @failed_builds << {
-            'job_name'               => job.name,
-            'build_number'           => job.last_build_num,
-            'is_under_investigation' => job.under_investigation?
-          }
-        when 'success'
-          @successful_jobs << job_details
-        end
-      end
-    end
-
-    erb :data
   end
 
   get '/api/view/:view.json' do
@@ -259,7 +161,7 @@ class Waylon < Sinatra::Application
     @errors = []
     @errors << "We couldn't find a server in our config for #{server}!"
 
-    @this_view = 'index'
+    @view_name = 'index'
 
     erb :base do
       erb :index
