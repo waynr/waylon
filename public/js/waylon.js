@@ -50,6 +50,7 @@ var waylon = {
             waylon.view.config.tbody = $("#jobs tbody");
             $(document).ajaxStop(function() {
                 waylon.view.sort();
+                $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
             });
         },
 
@@ -76,10 +77,6 @@ var waylon = {
                 },
 
                 complete: function() {
-                    // Tooltip placement must be configured after the elements
-                    // have already loaded. Therefore, it's safe to put it in
-                    // ajaxComplete.
-                    $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
                     $('#loading').hide();
 
                 },
@@ -181,10 +178,6 @@ var waylon = {
                 },
 
                 complete: function() {
-                    // This needs to be done after the elements have already loaded.
-                    // Therefore, it's safe to put it in ajaxComplete
-                    // ???
-                    $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
                     $('#loading').hide();
                 },
             });
@@ -236,6 +229,7 @@ var waylon = {
             img.attr("class", "weather");
             img.attr("src", json["weather"]["src"]);
             img.attr("alt", json["weather"]["alt"]);
+            img.attr("data-toggle", "tooltip");
             img.attr("title", json["weather"]["title"]);
 
             var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
