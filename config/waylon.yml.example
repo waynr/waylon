@@ -1,6 +1,7 @@
 ---
 config:
-  refresh_interval: 30  # page refresh interval (in seconds)
+  refresh_interval: 30   # polling interval (in seconds)
+  rebuild_interval: 3600 # page redraw interval (in seconds)
 views:
   'Awesome View 1':
     jenkins1:
