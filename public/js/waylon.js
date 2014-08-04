@@ -232,7 +232,7 @@ var waylon = {
         redraw: function(json, tr) {
             'use strict';
 
-            var jobinfo = waylon.job.jobInfo(json, tr.attr("id"));
+            var jobinfo = waylon.job.jobInfo(json, tr);
 
             tr.empty();
             tr.html(jobinfo);
@@ -248,14 +248,16 @@ var waylon = {
             //waylon.view.sort();
         },
 
-        jobInfo: function(json, id) {
+        jobInfo: function(json, tr) {
             'use strict';
 
             var td   = $("<td>").attr("class", "jobinfo");
             var img  = waylon.job.jobWeather(json["weather"]);
-            var link = $("<a>").attr("href", json["url"]).text(id);
+            var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
 
             td.append(img, link);
+
+            waylon.job.investigateButton(tr, td, json);
 
             return td;
         },
@@ -291,6 +293,37 @@ var waylon = {
                     break;
             }
             return stat;
+        },
+
+        investigateButton: function(tr, td, json) {
+            'use strict';
+
+            if (json["status"] == "failure") {
+                var btn = $("<a>").attr("role", "button");
+                btn.addClass("btn");
+                btn.addClass("btn-default");
+
+                if (json["investigating"]) {
+                    btn.addClass("disabled");
+                    btn.text("Under investigation");
+                    btn.attr("href", "#");
+                } else {
+                    btn.text("Investigate");
+                    btn.attr("href", "#");
+
+                    var url = "/view/" + tr.attr("viewname")
+                                 + "/" + tr.attr("servername")
+                                 + "/" + tr.attr("id")
+                                 + "/" + json["last_build_num"]
+                                 + "/investigate";
+
+                    btn.attr("href", url);
+                    btn.attr("target", "_blank");
+                }
+
+                var div = $("<div>").addClass("job_action").html(btn);
+                td.append(div);
+            }
         },
 
         queryUrl: function(viewname, servername, jobname) {
