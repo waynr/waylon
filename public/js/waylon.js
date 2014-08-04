@@ -198,9 +198,7 @@ var waylon = {
 
             var buildStatus = "unknown-job";
 
-            var tr = $("<tr>").append(
-                $("<td>").text(jobname)
-            );
+            var tr = $("<tr>").html($("<td>").text(jobname));
 
             tr.addClass(buildStatus);
             tr.attr("id", jobname);
@@ -230,35 +228,16 @@ var waylon = {
             });
         },
 
+        // Redraw the given job tr with the updated build status
         redraw: function(json, tr) {
             'use strict';
 
-            var img = $("<img>");
-            img.attr("class", "weather");
-            img.attr("src", json["weather"]["src"]);
-            img.attr("alt", json["weather"]["alt"]);
-            img.attr("data-toggle", "tooltip");
-            img.attr("title", json["weather"]["title"]);
-
-            var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
-
-            var stat;
-            switch(json["status"]) {
-                case "running":
-                    stat = "building-job";
-                    break;
-                case "failure":
-                    stat = "failed-job";
-                    break;
-                case "success":
-                    stat = "successful-job";
-            }
+            var jobinfo = waylon.job.jobInfo(json, tr.attr("id"));
 
             tr.empty();
-            tr.append(
-                $("<td>").append(img, link)
-            );
+            tr.html(jobinfo);
 
+            var stat = waylon.job.buildCSS(json["status"]);
             if(stat) {
                 tr.removeClass("unknown-job");
                 tr.addClass(stat);
@@ -267,6 +246,51 @@ var waylon = {
 
             waylon.view.updateStatsRollup();
             //waylon.view.sort();
+        },
+
+        jobInfo: function(json, id) {
+            'use strict';
+
+            var td   = $("<td>").attr("class", "jobinfo");
+            var img  = waylon.job.jobWeather(json["weather"]);
+            var link = $("<a>").attr("href", json["url"]).text(id);
+
+            td.append(img, link);
+
+            return td;
+        },
+
+        jobWeather: function(json) {
+            'use strict';
+
+            var img = $("<img>")
+                .attr("class", "weather")
+                .attr("src", json["src"])
+                .attr("alt", json["alt"])
+                .attr("title", json["title"]);
+
+            return img;
+        },
+
+        buildCSS: function(stat) {
+            'use strict';
+
+            var stat;
+            switch(stat) {
+                case "running":
+                    stat = "building-job";
+                    break;
+                case "failure":
+                    stat = "failed-job";
+                    break;
+                case "success":
+                    stat = "successful-job";
+                    break;
+                default:
+                    stat = "unknown-job";
+                    break;
+            }
+            return stat;
         },
 
         queryUrl: function(viewname, servername, jobname) {
