@@ -330,7 +330,7 @@ var waylon = {
         'use strict';
         $('body').addClass('nirvana');
         $('body').css('background-image', 'url(' + waylon.imageOfTheDay() + ')');
-        $('#radiator').hide();
+        $('#jobs').hide();
     },
 
     // Exit nirvana mode
@@ -338,6 +338,6 @@ var waylon = {
         'use strict';
         $('body').removeClass('nirvana');
         $('body').css('background-image', 'none');
-        $('#radiator').show();
+        $('#jobs').show();
     },
 };
