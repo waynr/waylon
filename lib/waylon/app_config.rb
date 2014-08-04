@@ -6,8 +6,8 @@ class Waylon
 
     def self.from_hash(hash)
       new.tap do |x|
-        x.refresh_interval = hash['refresh_interval']
-        x.rebuild_interval = hash['rebuild_interval']
+        x.refresh_interval = (hash['refresh_interval'] || 60)
+        x.rebuild_interval = (hash['rebuild_interval'] || 600)
       end
     end
   end
