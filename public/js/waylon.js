@@ -50,6 +50,7 @@ var waylon = {
             waylon.view.config.tbody = $("#jobs tbody");
             $(document).ajaxStop(function() {
                 waylon.view.sort();
+                waylon.view.checkNirvana();
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
             });
         },
@@ -90,6 +91,12 @@ var waylon = {
                 waylon.job.updateStatus($(tr));
             });
 
+            waylon.view.checkNirvana();
+        },
+
+        checkNirvana: function() {
+          'use strict';
+
             // Nirvana mode
             var isNirvana = waylon.nirvanaCheck();
             if (isNirvana) {
@@ -101,6 +108,7 @@ var waylon = {
                 waylon.nirvanaEnd();
             }
         },
+
         updateStatsRollup: function() {
             'use strict';
             var failed = 0, building = 0, successful = 0;
