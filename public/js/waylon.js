@@ -198,9 +198,7 @@ var waylon = {
 
             var buildStatus = "unknown-job";
 
-            var tr = $("<tr>").append(
-                $("<td>").text(jobname)
-            );
+            var tr = $("<tr>").html($("<td>").text(jobname));
 
             tr.addClass(buildStatus);
             tr.attr("id", jobname);
@@ -230,35 +228,16 @@ var waylon = {
             });
         },
 
+        // Redraw the given job tr with the updated build status
         redraw: function(json, tr) {
             'use strict';
 
-            var img = $("<img>");
-            img.attr("class", "weather");
-            img.attr("src", json["weather"]["src"]);
-            img.attr("alt", json["weather"]["alt"]);
-            img.attr("data-toggle", "tooltip");
-            img.attr("title", json["weather"]["title"]);
-
-            var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
-
-            var stat;
-            switch(json["status"]) {
-                case "running":
-                    stat = "building-job";
-                    break;
-                case "failure":
-                    stat = "failed-job";
-                    break;
-                case "success":
-                    stat = "successful-job";
-            }
+            var jobinfo = waylon.job.jobInfo(json, tr);
 
             tr.empty();
-            tr.append(
-                $("<td>").append(img, link)
-            );
+            tr.html(jobinfo);
 
+            var stat = waylon.job.buildCSS(json["status"]);
             if(stat) {
                 tr.removeClass("unknown-job");
                 tr.addClass(stat);
@@ -267,6 +246,84 @@ var waylon = {
 
             waylon.view.updateStatsRollup();
             //waylon.view.sort();
+        },
+
+        jobInfo: function(json, tr) {
+            'use strict';
+
+            var td   = $("<td>").attr("class", "jobinfo");
+            var img  = waylon.job.jobWeather(json["weather"]);
+            var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
+
+            td.append(img, link);
+
+            waylon.job.investigateButton(tr, td, json);
+
+            return td;
+        },
+
+        jobWeather: function(json) {
+            'use strict';
+
+            var img = $("<img>")
+                .attr("class", "weather")
+                .attr("src", json["src"])
+                .attr("alt", json["alt"])
+                .attr("title", json["title"]);
+
+            return img;
+        },
+
+        buildCSS: function(stat) {
+            'use strict';
+
+            var stat;
+            switch(stat) {
+                case "running":
+                    stat = "building-job";
+                    break;
+                case "failure":
+                    stat = "failed-job";
+                    break;
+                case "success":
+                    stat = "successful-job";
+                    break;
+                default:
+                    stat = "unknown-job";
+                    break;
+            }
+            return stat;
+        },
+
+        investigateButton: function(tr, td, json) {
+            'use strict';
+
+            if (json["status"] == "failure") {
+                var btn = $("<a>").attr("role", "button");
+                btn.addClass("btn");
+                btn.addClass("btn-default");
+
+                if (json["investigating"]) {
+                    btn.addClass("disabled");
+                    btn.text("Under investigation");
+                    btn.attr("href", "#");
+                } else {
+                    btn.text("Investigate");
+                    btn.attr("href", "#");
+
+                    var url = "/view/" + tr.attr("viewname")
+                                 + "/" + tr.attr("servername")
+                                 + "/" + tr.attr("id")
+                                 + "/" + json["last_build_num"]
+                                 + "/investigate";
+
+                    btn.attr("href", url);
+                    btn.attr("target", "_blank");
+                }
+
+                var div = $("<div>").addClass("job_action").html(btn);
+                td.append(div);
+            }
         },
 
         queryUrl: function(viewname, servername, jobname) {

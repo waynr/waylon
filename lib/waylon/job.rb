@@ -65,13 +65,15 @@ class Waylon
 
     def to_hash
       {
-        'name'         => @name,
-        'url'          => @job_details['url'],
-        'status'       => status,
-        'progress_pct' => (progress_pct if status == 'running'),
-        'eta'          => (eta if status == 'running'),
-        'health'       => @job_details['healthReport'][0]['score'],
-        'weather'      => weather(@job_details['healthReport'][0]['score']),
+        'name'           => @name,
+        'url'            => @job_details['url'],
+        'status'         => status,
+        'progress_pct'   => (progress_pct if status == 'running'),
+        'eta'            => (eta if status == 'running'),
+        'health'         => @job_details['healthReport'][0]['score'],
+        'weather'        => weather(@job_details['healthReport'][0]['score']),
+        'last_build_num' => last_build_num,
+        'investigating'  => under_investigation?
       }.reject{ |k, v| v.nil? }
     end
 
