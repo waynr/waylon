@@ -257,6 +257,10 @@ var waylon = {
 
             td.append(img, link);
 
+            if (json["status"] == "running") {
+                waylon.job.progressBar(td, json["progress_pct"]);
+            }
+
             waylon.job.investigateButton(tr, td, json);
 
             return td;
@@ -293,6 +297,20 @@ var waylon = {
                     break;
             }
             return stat;
+        },
+
+        progressBar: function(td, progress) {
+            var div = $("<div>").attr("class", "progress")
+                .append(
+                    $("<div>")
+                        .attr("class", "progress-bar progress-bar-info")
+                        .attr("role", "progressbar")
+                        .attr("aria-valuenow", progress)
+                        .attr("aria-valuemin", "0")
+                        .attr("aria-valuemax", "100")
+                        .attr("style", "width:" + progress + "%")
+                    );
+            td.append(div);
         },
 
         investigateButton: function(tr, td, json) {
