@@ -11,6 +11,8 @@
  */
 
 var waylon = {
+
+    // Base configuration
     // Ideally, this should be in waylon.yml, but here are a few sane defaults
     config: {
         rebuild_interval: 3600, // rebuild the page every 60 min
@@ -18,7 +20,7 @@ var waylon = {
         view: null
     },
 
-    // Allow configuration to be passed-in from the page.
+    // Extend configuration from values passed-in from the page.
     init: function (settings) {
         'use strict';
         $.extend(waylon.config, settings);
@@ -26,8 +28,8 @@ var waylon = {
         $(document).ready(waylon.setup());
     },
 
-    // Setup the Waylon routine once the document is ready.
-    // Repeat every 'refresh_interval' seconds.
+    // Setup the Waylon rebuild and refresh routines once the document is ready.
+    // Repeat every 'refresh_interval' and 'rebuild_interval' seconds.
     setup: function () {
         'use strict';
 
@@ -38,6 +40,8 @@ var waylon = {
         setInterval(waylon.view.refresh, waylon.config.refresh_interval * 1000);
     },
 
+    // Set up each of the individual views (tabs) based on values in the
+    // configuration file.
     view: {
         config: { tbody: null },
 
@@ -55,6 +59,7 @@ var waylon = {
             });
         },
 
+        // redraw the view
         rebuild: function () {
             'use strict';
             console.log("Redrawing view " + waylon.config.view);
@@ -84,6 +89,7 @@ var waylon = {
             });
         },
 
+        // refresh the data presented in the current view
         refresh: function () {
             'use strict';
             console.log("Refreshing view " + waylon.config.view);
@@ -94,6 +100,7 @@ var waylon = {
             waylon.view.checkNirvana();
         },
 
+        // a simple function to check if we're entering or exiting nirvana mode.
         checkNirvana: function () {
             'use strict';
 
@@ -108,6 +115,7 @@ var waylon = {
             }
         },
 
+        // update the job counts / statistics at the top of the page
         updateStatsRollup: function () {
             'use strict';
             var failed = 0, building = 0, successful = 0;
@@ -132,6 +140,7 @@ var waylon = {
             $("#total-jobs").text(failed + building + successful);
         },
 
+        // sorts jobs based on status, then alphanumerically
         sort: function () {
             'use strict';
             var tbody = waylon.view.config.tbody,
@@ -168,6 +177,7 @@ var waylon = {
             });
         },
 
+        // build the servers url based on the passed-in view name
         serversUrl: function (viewname) {
             'use strict';
             return "/api/view/" + viewname + "/servers.json";
@@ -175,6 +185,7 @@ var waylon = {
     },
 
     server: {
+        // api call to get the list of jobs for a given server
         populate: function (viewname, servername, tbody) {
             'use strict';
             var url = "/api/view/" + viewname + "/server/" + servername + "/jobs.json";
@@ -199,7 +210,9 @@ var waylon = {
         }
     },
 
+    // job-related functions
     job: {
+        // pre-populate the list of jobs, starting with an 'unknown' status
         prepopulate: function (viewname, servername, jobname, tbody) {
             'use strict';
 
@@ -216,6 +229,7 @@ var waylon = {
             return tr;
         },
 
+        // update the status for the jobs, redrawing on success
         updateStatus: function (tr) {
             'use strict';
             var url = waylon.job.queryUrl(
@@ -254,6 +268,8 @@ var waylon = {
             waylon.view.sort();
         },
 
+        // Based on the job status, display additional info including build
+        // stability, progress, and ETA.
         jobInfo: function (json, tr) {
             'use strict';
 
@@ -273,6 +289,7 @@ var waylon = {
             return td;
         },
 
+        // Display build stability as the weather, similar to Jenkins.
         jobWeather: function (health) {
             'use strict';
 
@@ -304,6 +321,7 @@ var waylon = {
             return img;
         },
 
+        // CSS classes based on job status
         buildCSS: function (stat) {
             'use strict';
 
@@ -325,6 +343,7 @@ var waylon = {
             return stat;
         },
 
+        // Display a simple progress bar below the job name if it's building
         progressBar: function (td, progress) {
             'use strict';
             var div = $("<div>").attr("class", "progress")
@@ -340,6 +359,8 @@ var waylon = {
             td.append(div);
         },
 
+        // Add an "investigate" button to failed jobs, allowing the user to
+        // mark the failed build as "under investigation".
         investigateButton: function (tr, td, json) {
             'use strict';
 
@@ -371,6 +392,7 @@ var waylon = {
             }
         },
 
+        // Display the ETA for a job, along with a fancy glyphicon.
         eta: function (td, data) {
             'use strict';
             var icon = $("<span>");
@@ -384,11 +406,13 @@ var waylon = {
             td.append(div);
         },
 
+        // Build the query URL for a given job
         queryUrl: function (viewname, servername, jobname) {
             'use strict';
             return "/api/view/" + viewname + "/server/" + servername + "/job/" + jobname + ".json";
         },
 
+        // Job status sorting (failed, building, etc)
         sortValue: function (stat) {
             switch (stat) {
                 case "failed-job":
