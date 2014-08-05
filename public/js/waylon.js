@@ -49,7 +49,6 @@ var waylon = {
         setup: function() {
             waylon.view.config.tbody = $("#jobs tbody");
             $(document).ajaxStop(function() {
-                waylon.view.sort();
                 waylon.view.checkNirvana();
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
             });
@@ -141,9 +140,16 @@ var waylon = {
                 var as = waylon.job.sortValue($(a).attr("status"));
                 var bs = waylon.job.sortValue($(b).attr("status"));
 
+                var at = $(a).attr("id");
+                var bt = $(b).attr("id");
+
                 if (as > bs) {
                     return -1;
                 } else if (as < bs) {
+                    return 1;
+                } else if (at > bt) { // sort values are equivalent, sort by ID
+                    return -1;
+                } else if (at < bt) {
                     return 1;
                 } else {
                     return 0;
@@ -245,7 +251,7 @@ var waylon = {
             }
 
             waylon.view.updateStatsRollup();
-            //waylon.view.sort();
+            waylon.view.sort();
         },
 
         jobInfo: function(json, tr) {
