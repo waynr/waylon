@@ -215,14 +215,23 @@ var waylon = {
         prepopulate: function (viewname, servername, jobname, tbody) {
             'use strict';
 
-            var buildStatus = "unknown-job",
-                tr = $("<tr>").html($("<td>").text(jobname));
+            var buildstatus = "unknown-job";
 
-            tr.addClass(buildStatus);
-            tr.attr("id", jobname);
-            tr.attr("status", buildStatus);
-            tr.attr("viewname", viewname);
-            tr.attr("servername", servername);
+            var tmpl = Handlebars.compile([
+                '<tr class="{{buildstatus}}" id="{{jobname}}" status="{{buildstatus}}" servername="{{servername}}" viewname="{{viewname}}">',
+                    '<td class="jobinfo">',
+                        '{{jobname}}',
+                    '</td>',
+                "</tr>",
+            ].join(""));
+
+            var rendered = tmpl({
+                'jobname': jobname,
+                'buildstatus': buildstatus,
+                'servername': servername,
+                'viewname': viewname
+            });
+            var tr = $(rendered);
 
             tbody.append(tr);
             return tr;
@@ -309,14 +318,12 @@ var waylon = {
                     break;
             }
 
-            var img = $("<img>")
-                .attr("class", "weather")
-                .attr("data-toggle", "tooltip")
-                .attr("src", img_src)
-                .attr("alt", img_alt)
-                .attr("title", img_title);
+            var tmpl = Handlebars.compile('<img class="weather" data-toggle="tooltip" src="{{img_src}}" alt="{{img_alt}}" title="{{img_title}}" />');
 
-            return img;
+
+            var rendered = tmpl({'img_src': img_src, 'alt': img_alt, 'title': img_title})
+
+            return rendered;
         },
 
         // CSS classes based on job status
@@ -344,17 +351,16 @@ var waylon = {
         // Display a simple progress bar below the job name if it's building
         progressBar: function (td, progress) {
             'use strict';
-            var div = $("<div>").attr("class", "progress")
-                .append(
-                    $("<div>")
-                        .attr("class", "progress-bar progress-bar-info")
-                        .attr("role", "progressbar")
-                        .attr("aria-valuenow", progress)
-                        .attr("aria-valuemin", "0")
-                        .attr("aria-valuemax", "100")
-                        .attr("style", "width:" + progress + "%")
-                );
-            td.append(div);
+
+            var tmpl = Handlebars.compile([
+                '<div class="progress">',
+                    '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%" />',
+                '</div>'
+            ].join(""));
+
+            var rendered = tmpl({"progress": progress});
+
+            td.append(rendered);
         },
 
         // Add an "investigate" button to failed jobs, allowing the user to
@@ -393,13 +399,15 @@ var waylon = {
         // Display the ETA for a job, along with a fancy glyphicon.
         eta: function (td, data) {
             'use strict';
-            var icon = $("<span>");
-            icon.addClass("glyphicon glyphicon-time");
-            icon.attr("data-toggle", "tooltip");
-            icon.attr("title", "Estimated time remaining");
+            var tmpl = Handlebars.compile([
+                '<div class="job_action">',
+                    '<span class="glyphicon glyphicon-time" data-toggle="tooltop" title="Estimated time remaining" />',
+                    '&nbsp;',
+                    '{{data}}',
+                '</div>'
+            ].join(""));
 
-            var div = $("<div>").addClass("job_action");
-            div.append(icon, "&nbsp;", data);
+            var div = tmpl({'data': data});
 
             td.append(div);
         },
