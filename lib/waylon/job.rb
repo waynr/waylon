@@ -71,37 +71,9 @@ class Waylon
         'progress_pct'   => (progress_pct if status == 'running'),
         'eta'            => (eta if status == 'running'),
         'health'         => @job_details['healthReport'][0]['score'],
-        'weather'        => weather(@job_details['healthReport'][0]['score']),
         'last_build_num' => last_build_num,
         'investigating'  => under_investigation?
       }.reject{ |k, v| v.nil? }
     end
-
-    private
-
-    # weather() returns an img src, alt, and title, based on build stability
-    def weather(score)
-      case score.to_i
-      when 100
-        {
-          'src' => '/img/sun.png',
-          'alt' => '[sun]',
-          'title' => 'No recent builds failed'
-        }
-      when 80
-        {
-          'src' => '/img/cloud.png',
-          'alt' => '[cloud]',
-          'title' => '1 of the last 5 builds failed'
-        }
-      else
-        {
-          'src' => '/img/umbrella.png',
-          'alt' => '[umbrella]',
-          'title' => '2 or more of the last 5 builds failed'
-        }
-      end
-    end
-
   end
 end
