@@ -15,7 +15,7 @@ var waylon = {
     config: {
         rebuild_interval: 3600, // rebuild the page every 60 min
         refresh_interval: 60,   // poll the Waylon API every 60 seconds
-        view: null,
+        view: null
     },
 
     // Allow configuration to be passed-in from the page.
@@ -41,24 +41,26 @@ var waylon = {
     view: {
         config: { tbody: null },
 
-        init: function(settings) {
+        init: function (settings) {
             'use strict';
             $.extend(waylon.view.config, settings);
         },
 
-        setup: function() {
+        setup: function () {
+            'use strict';
             waylon.view.config.tbody = $("#jobs tbody");
-            $(document).ajaxStop(function() {
+            $(document).ajaxStop(function () {
                 waylon.view.checkNirvana();
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
             });
         },
 
-        rebuild: function() {
+        rebuild: function () {
+            'use strict';
             console.log("Redrawing view " + waylon.config.view);
 
-            var viewname = waylon.config.view;
-            var tbody = waylon.view.config.tbody;
+            var viewname = waylon.config.view,
+                tbody = waylon.view.config.tbody;
             tbody.empty();
 
             $.ajax({
@@ -66,54 +68,52 @@ var waylon = {
                 type: "GET",
                 dataType: "json",
 
-                send: function() {
+                send: function () {
                     $('#loading').show();
                 },
 
-                success: function(json) {
-                    $.each(json, function(i, servername) {
+                success: function (json) {
+                    $.each(json, function (i, servername) {
                         waylon.server.populate(viewname, servername, tbody);
                     });
                 },
 
-                complete: function() {
+                complete: function () {
                     $('#loading').hide();
-
-                },
-
+                }
             });
         },
 
-        refresh: function() {
+        refresh: function () {
+            'use strict';
             console.log("Refreshing view " + waylon.config.view);
-            waylon.view.eachJob(function(tr) {
+            waylon.view.eachJob(function (tr) {
                 waylon.job.updateStatus($(tr));
             });
 
             waylon.view.checkNirvana();
         },
 
-        checkNirvana: function() {
-          'use strict';
+        checkNirvana: function () {
+            'use strict';
 
             // Nirvana mode
             var isNirvana = waylon.nirvanaCheck();
             if (isNirvana) {
                 console.log("Entering nirvana mode");
                 waylon.nirvanaBegin();
-            }
-            else {
+            } else {
                 console.log("Leaving nirvana mode");
                 waylon.nirvanaEnd();
             }
         },
 
-        updateStatsRollup: function() {
+        updateStatsRollup: function () {
             'use strict';
             var failed = 0, building = 0, successful = 0;
 
-            waylon.view.eachJob(function(tr) {
-                switch($(tr).attr("status")) {
+            waylon.view.eachJob(function (tr) {
+                switch ($(tr).attr("status")) {
                     case "failed-job":
                         failed += 1;
                         break;
@@ -132,16 +132,16 @@ var waylon = {
             $("#total-jobs").text(failed + building + successful);
         },
 
-        sort: function() {
-            var tbody = waylon.view.config.tbody;
-            var children = tbody.children();
+        sort: function () {
+            'use strict';
+            var tbody = waylon.view.config.tbody,
+                children = tbody.children();
 
-            children.sort(function(a, b) {
-                var as = waylon.job.sortValue($(a).attr("status"));
-                var bs = waylon.job.sortValue($(b).attr("status"));
-
-                var at = $(a).attr("id");
-                var bt = $(b).attr("id");
+            children.sort(function (a, b) {
+                var as = waylon.job.sortValue($(a).attr("status")),
+                    bs = waylon.job.sortValue($(b).attr("status")),
+                    at = $(a).attr("id"),
+                    bt = $(b).attr("id");
 
                 if (as > bs) {
                     return -1;
@@ -159,23 +159,24 @@ var waylon = {
             children.detach().appendTo(tbody);
         },
 
-        eachJob: function(callback) {
+        eachJob: function (callback) {
             'use strict';
             var children = waylon.view.config.tbody.children();
 
-            $.each(children, function(i, elem) {
+            $.each(children, function (i, elem) {
                 callback(elem);
             });
         },
 
-        serversUrl: function(viewname) {
+        serversUrl: function (viewname) {
+            'use strict';
             return "/api/view/" + viewname + "/servers.json";
-        },
+        }
     },
 
     server: {
-        populate: function(viewname, servername, tbody) {
-
+        populate: function (viewname, servername, tbody) {
+            'use strict';
             var url = "/api/view/" + viewname + "/server/" + servername + "/jobs.json";
 
             $('#loading').show();
@@ -184,27 +185,26 @@ var waylon = {
                 type: "GET",
                 dataType: "json",
 
-                success: function(json) {
-                    $.each(json, function(i, elem) {
-                        var tr= waylon.job.prepopulate(viewname, servername, elem, tbody);
+                success: function (json) {
+                    $.each(json, function (i, elem) {
+                        var tr = waylon.job.prepopulate(viewname, servername, elem, tbody);
                         waylon.job.updateStatus(tr);
                     });
                 },
 
-                complete: function() {
+                complete: function () {
                     $('#loading').hide();
-                },
+                }
             });
-        },
+        }
     },
 
     job: {
-        prepopulate: function(viewname, servername, jobname, tbody) {
+        prepopulate: function (viewname, servername, jobname, tbody) {
             'use strict';
 
-            var buildStatus = "unknown-job";
-
-            var tr = $("<tr>").html($("<td>").text(jobname));
+            var buildStatus = "unknown-job",
+                tr = $("<tr>").html($("<td>").text(jobname));
 
             tr.addClass(buildStatus);
             tr.attr("id", jobname);
@@ -216,35 +216,35 @@ var waylon = {
             return tr;
         },
 
-        updateStatus: function(tr) {
+        updateStatus: function (tr) {
             'use strict';
             var url = waylon.job.queryUrl(
                     tr.attr("viewname"),
                     tr.attr("servername"),
                     tr.attr("id")
-                    );
+                );
 
             $.ajax({
                 url: url,
                 type: "GET",
                 dataType: "json",
-                success: function(json) {
+                success: function (json) {
                     waylon.job.redraw(json, tr);
-                },
+                }
             });
         },
 
         // Redraw the given job tr with the updated build status
-        redraw: function(json, tr) {
+        redraw: function (json, tr) {
             'use strict';
 
-            var jobinfo = waylon.job.jobInfo(json, tr);
+            var jobinfo = waylon.job.jobInfo(json, tr),
+                stat = waylon.job.buildCSS(json.status);
 
             tr.empty();
             tr.html(jobinfo);
 
-            var stat = waylon.job.buildCSS(json["status"]);
-            if(stat) {
+            if (stat) {
                 tr.removeClass("unknown-job");
                 tr.addClass(stat);
                 tr.attr("status", stat);
@@ -254,17 +254,18 @@ var waylon = {
             waylon.view.sort();
         },
 
-        jobInfo: function(json, tr) {
+        jobInfo: function (json, tr) {
             'use strict';
 
-            var td   = $("<td>").attr("class", "jobinfo");
-            var img  = waylon.job.jobWeather(json["health"]);
-            var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
+            var td   = $("<td>").attr("class", "jobinfo"),
+                img  = waylon.job.jobWeather(json.health),
+                link = $("<a>").attr("href", json.url).text(tr.attr("id"));
 
             td.append(img, link);
 
-            if (json["status"] == "running") {
-                waylon.job.progressBar(td, json["progress_pct"]);
+            if (json.status === "running") {
+                waylon.job.progressBar(td, json.progress_pct);
+                // TODO: display ETA
             }
 
             waylon.job.investigateButton(tr, td, json);
@@ -272,10 +273,10 @@ var waylon = {
             return td;
         },
 
-        jobWeather: function(health) {
+        jobWeather: function (health) {
             'use strict';
 
-            switch(parseInt(health)) {
+            switch (parseInt(health, 10)) {
                 case 100:
                     var img_src   = "/img/sun.png",
                         img_alt   = "[sun]",
@@ -302,11 +303,11 @@ var waylon = {
             return img;
         },
 
-        buildCSS: function(stat) {
+        buildCSS: function (stat) {
             'use strict';
 
             var stat;
-            switch(stat) {
+            switch (stat) {
                 case "running":
                     stat = "building-job";
                     break;
@@ -323,7 +324,8 @@ var waylon = {
             return stat;
         },
 
-        progressBar: function(td, progress) {
+        progressBar: function (td, progress) {
+            'use strict';
             var div = $("<div>").attr("class", "progress")
                 .append(
                     $("<div>")
@@ -333,19 +335,19 @@ var waylon = {
                         .attr("aria-valuemin", "0")
                         .attr("aria-valuemax", "100")
                         .attr("style", "width:" + progress + "%")
-                    );
+                );
             td.append(div);
         },
 
-        investigateButton: function(tr, td, json) {
+        investigateButton: function (tr, td, json) {
             'use strict';
 
-            if (json["status"] == "failure") {
+            if (json.status === "failure") {
                 var btn = $("<a>").attr("role", "button");
                 btn.addClass("btn");
                 btn.addClass("btn-default");
 
-                if (json["investigating"]) {
+                if (json.investigating) {
                     btn.addClass("disabled");
                     btn.text("Under investigation");
                     btn.attr("href", "#");
@@ -356,7 +358,7 @@ var waylon = {
                     var url = "/view/" + tr.attr("viewname")
                                  + "/" + tr.attr("servername")
                                  + "/" + tr.attr("id")
-                                 + "/" + json["last_build_num"]
+                                 + "/" + json.last_build_num
                                  + "/investigate";
 
                     btn.attr("href", url);
@@ -368,12 +370,13 @@ var waylon = {
             }
         },
 
-        queryUrl: function(viewname, servername, jobname) {
+        queryUrl: function (viewname, servername, jobname) {
+            'use strict';
             return "/api/view/" + viewname + "/server/" + servername + "/job/" + jobname + ".json";
         },
 
-        sortValue: function(stat) {
-            switch(stat) {
+        sortValue: function (stat) {
+            switch (stat) {
                 case "failed-job":
                     return 3;
                 case "building-job":
@@ -385,7 +388,7 @@ var waylon = {
                 default:
                     return -1;
             }
-        },
+        }
     },
 
     // Nirvana mode routines
@@ -418,8 +421,7 @@ var waylon = {
 
         if ((bad_count === 0) && (good_count >= 1)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     },
@@ -438,5 +440,5 @@ var waylon = {
         $('body').removeClass('nirvana');
         $('body').css('background-image', 'none');
         $('#jobs').show();
-    },
+    }
 };
