@@ -264,8 +264,8 @@ var waylon = {
             td.append(img, link);
 
             if (json.status === "running") {
+                waylon.job.eta(td, json.eta);
                 waylon.job.progressBar(td, json.progress_pct);
-                // TODO: display ETA
             }
 
             waylon.job.investigateButton(tr, td, json);
@@ -369,6 +369,19 @@ var waylon = {
                 var div = $("<div>").addClass("job_action").html(btn);
                 td.append(div);
             }
+        },
+
+        eta: function (td, data) {
+            'use strict';
+            var icon = $("<span>");
+            icon.addClass("glyphicon glyphicon-time");
+            icon.attr("data-toggle", "tooltip");
+            icon.attr("title", "Estimated time remaining");
+
+            var div = $("<div>").addClass("job_action");
+            div.append(icon, "&nbsp;", data);
+
+            td.append(div);
         },
 
         queryUrl: function (viewname, servername, jobname) {
