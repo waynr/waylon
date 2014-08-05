@@ -258,8 +258,7 @@ var waylon = {
             tr.html(jobinfo);
 
             if (stat) {
-                tr.removeClass("unknown-job");
-                tr.addClass(stat);
+                tr.attr("class", stat);
                 tr.attr("status", stat);
             }
 
