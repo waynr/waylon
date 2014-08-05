@@ -104,14 +104,13 @@ var waylon = {
         checkNirvana: function () {
             'use strict';
 
-            // Nirvana mode
-            var isNirvana = waylon.nirvanaCheck();
+            var isNirvana = waylon.nirvana.check();
             if (isNirvana) {
                 console.log("Entering nirvana mode");
-                waylon.nirvanaBegin();
+                waylon.nirvana.begin();
             } else {
                 console.log("Leaving nirvana mode");
-                waylon.nirvanaEnd();
+                waylon.nirvana.end();
             }
         },
 
@@ -429,54 +428,56 @@ var waylon = {
         }
     },
 
-    // Nirvana mode routines
-    // Return the image of the day for nirvana mode
-    imageOfTheDay: function () {
-        'use strict';
-        var date = new Date(),
-            day = date.getDay(),
-            result = "/img/img0" + day + ".png";
-        return result;
-    },
+    nirvana: {
+        // Nirvana mode routines
+        // Return the image of the day for nirvana mode
+        imageOfTheDay: function () {
+            'use strict';
+            var date = new Date(),
+                day = date.getDay(),
+                result = "/img/img0" + day + ".png";
+            return result;
+        },
 
-    // Nirvana mode enablement. Checks for the number of elements on the
-    // page belonging to any of the classes listed in elems[]. If any are
-    // found, returns false.
-    nirvanaCheck: function () {
-        'use strict';
-        var bad_elems  = ['.building-job', '.failed-job', '.alert-danger', '.alert-warning'],
-            good_elems = [ '.successful-job' ],
-            bad_count  = 0,
-            good_count = 0;
+        // Nirvana mode enablement. Checks for the number of elements on the
+        // page belonging to any of the classes listed in elems[]. If any are
+        // found, returns false.
+        check: function () {
+            'use strict';
+            var bad_elems  = ['.building-job', '.failed-job', '.alert-danger', '.alert-warning'],
+                good_elems = [ '.successful-job' ],
+                bad_count  = 0,
+                good_count = 0;
 
-        $.each(bad_elems, function (i, elem) {
-            bad_count += $(elem).length;
-        });
+            $.each(bad_elems, function (i, elem) {
+                bad_count += $(elem).length;
+            });
 
-        $.each(good_elems, function (i, elem) {
-            good_count += $(elem).length;
-        });
+            $.each(good_elems, function (i, elem) {
+                good_count += $(elem).length;
+            });
 
-        if ((bad_count === 0) && (good_count >= 1)) {
-            return true;
-        } else {
-            return false;
+            if ((bad_count === 0) && (good_count >= 1)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        // Enter nirvana mode
+        begin: function () {
+            'use strict';
+            $('body').addClass('nirvana');
+            $('body').css('background-image', 'url(' + waylon.nirvana.imageOfTheDay() + ')');
+            $('#jobs').hide();
+        },
+
+        // Exit nirvana mode
+        end: function () {
+            'use strict';
+            $('body').removeClass('nirvana');
+            $('body').css('background-image', 'none');
+            $('#jobs').show();
         }
-    },
-
-    // Enter nirvana mode
-    nirvanaBegin: function () {
-        'use strict';
-        $('body').addClass('nirvana');
-        $('body').css('background-image', 'url(' + waylon.imageOfTheDay() + ')');
-        $('#jobs').hide();
-    },
-
-    // Exit nirvana mode
-    nirvanaEnd: function () {
-        'use strict';
-        $('body').removeClass('nirvana');
-        $('body').css('background-image', 'none');
-        $('#jobs').show();
     }
 };
