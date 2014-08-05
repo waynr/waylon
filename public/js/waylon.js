@@ -296,6 +296,7 @@ var waylon = {
 
             var img = $("<img>")
                 .attr("class", "weather")
+                .attr("data-toggle", "tooltip")
                 .attr("src", img_src)
                 .attr("alt", img_alt)
                 .attr("title", img_title);
