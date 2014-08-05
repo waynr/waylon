@@ -258,7 +258,7 @@ var waylon = {
             'use strict';
 
             var td   = $("<td>").attr("class", "jobinfo");
-            var img  = waylon.job.jobWeather(json["weather"]);
+            var img  = waylon.job.jobWeather(json["health"]);
             var link = $("<a>").attr("href", json["url"]).text(tr.attr("id"));
 
             td.append(img, link);
@@ -272,14 +272,32 @@ var waylon = {
             return td;
         },
 
-        jobWeather: function(json) {
+        jobWeather: function(health) {
             'use strict';
+
+            switch(parseInt(health)) {
+                case 100:
+                    var img_src   = "/img/sun.png",
+                        img_alt   = "[sun]",
+                        img_title = "No recent builds failed";
+                    break;
+                case 80:
+                    var img_src   = "/img/cloud.png",
+                        img_alt   = "[cloud]",
+                        img_title = "1 of the last 5 builds failed";
+                    break;
+                default:
+                    var img_src   = "/img/umbrella.png",
+                        img_alt   = "[umbrella]",
+                        img_title = "2 or more of the last 5 builds failed";
+                    break;
+            }
 
             var img = $("<img>")
                 .attr("class", "weather")
-                .attr("src", json["src"])
-                .attr("alt", json["alt"])
-                .attr("title", json["title"]);
+                .attr("src", img_src)
+                .attr("alt", img_alt)
+                .attr("title", img_title);
 
             return img;
         },
