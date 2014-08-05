@@ -148,9 +148,9 @@ var waylon = {
                 } else if (as < bs) {
                     return 1;
                 } else if (at > bt) { // sort values are equivalent, sort by ID
-                    return -1;
-                } else if (at < bt) {
                     return 1;
+                } else if (at < bt) {
+                    return -1;
                 } else {
                     return 0;
                 }
