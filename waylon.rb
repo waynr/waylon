@@ -13,10 +13,6 @@ class Waylon < Sinatra::Application
   include Deterministic
 
   helpers do
-    def h(text)
-      CGI::escape(text)
-    end
-
     # get_views() does just that, gets a list of views from
     # the config file and returns an array of strings.
     def get_views()
