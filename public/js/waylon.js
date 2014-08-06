@@ -321,7 +321,7 @@ var waylon = {
             var tmpl = Handlebars.compile('<img class="weather" data-toggle="tooltip" src="{{img_src}}" alt="{{img_alt}}" title="{{img_title}}" />');
 
 
-            var rendered = tmpl({'img_src': img_src, 'alt': img_alt, 'title': img_title})
+            var rendered = tmpl({'img_src': img_src, 'img_alt': img_alt, 'img_title': img_title})
 
             return rendered;
         },
@@ -401,7 +401,7 @@ var waylon = {
             'use strict';
             var tmpl = Handlebars.compile([
                 '<div class="job_action">',
-                    '<span class="glyphicon glyphicon-time" data-toggle="tooltop" title="Estimated time remaining" />',
+                    '<span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Estimated time remaining" />',
                     '&nbsp;',
                     '{{data}}',
                 '</div>'
