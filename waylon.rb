@@ -13,16 +13,15 @@ class Waylon < Sinatra::Application
   include Deterministic
 
   helpers do
-    # get_views() does just that, gets a list of views from
-    # the config file and returns an array of strings.
-    def get_views()
-      gen_config.views.map(&:name)
-    end
-
     def gen_config
       root = File.dirname(__FILE__)
       config = YAML.load_file(File.join(root, 'config/waylon.yml'))
       Waylon::RootConfig.from_hash(config)
+    end
+
+    # Generate a list of views
+    def get_views()
+      gen_config.views.map(&:name)
     end
 
     def manadic(monad)
