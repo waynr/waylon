@@ -13,6 +13,7 @@ class Waylon < Sinatra::Application
   include Deterministic
 
   helpers do
+    # Read configuration in from YAML
     def gen_config
       root = File.dirname(__FILE__)
       config = YAML.load_file(File.join(root, 'config/waylon.yml'))
@@ -37,7 +38,6 @@ class Waylon < Sinatra::Application
     end
   end
 
-  # Landing page (`/`)
   # Print a list of views available on this Waylon instance.
   get '/' do
     @view_name = 'index'
@@ -47,6 +47,7 @@ class Waylon < Sinatra::Application
     end
   end
 
+  # Displays the jobs configured for a particular view.
   get '/view/:name' do
     @view_name = CGI.unescape(params[:name])
     erb :base do
@@ -54,6 +55,7 @@ class Waylon < Sinatra::Application
     end
   end
 
+  # API: the name and server URLs of a particular view
   get '/api/view/:view.json' do
     view_name = CGI.unescape(params[:view])
 
@@ -63,6 +65,7 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  # API: "friendly" names of servers for a particular view
   get '/api/view/:view/servers.json' do
     view_name = CGI.unescape(params[:view])
 
@@ -72,6 +75,8 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  # API: using the "friendly" name of the server, returns the name,
+  # URL, and jobs associated with that server
   get '/api/view/:view/server/:server.json' do
     view_name = CGI.unescape(params[:view])
     server_name = CGI.unescape(params[:server])
@@ -83,6 +88,7 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  # API: like the above, but returns only a list of jobs
   get '/api/view/:view/server/:server/jobs.json' do
     view_name = CGI.unescape(params[:view])
     server_name = CGI.unescape(params[:server])
@@ -94,6 +100,7 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  # API: gets job details for a particular job on a particular server
   get '/api/view/:view/server/:server/job/:job.json' do
     view_name   = CGI.unescape(params[:view])
     server_name = CGI.unescape(params[:server])
@@ -108,7 +115,6 @@ class Waylon < Sinatra::Application
   end
 
   # Investigate a failed build
-  #
   get '/view/:view/:server/:job/:build/investigate' do
     server   = CGI.unescape(params[:server])
     job      = CGI.unescape(params[:job])
