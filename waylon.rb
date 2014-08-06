@@ -116,24 +116,22 @@ class Waylon < Sinatra::Application
 
   # Investigate a failed build
   get '/view/:view/:server/:job/:build/investigate' do
-    server   = CGI.unescape(params[:server])
-    job      = CGI.unescape(params[:job])
-    build    = CGI.unescape(params[:build])
-    postdata = { 'description' => 'Under investigation' }
-    prefix   = "/job/#{job}/#{build}"
+    view_name   = CGI.unescape(params[:view])
+    server_name = CGI.unescape(params[:server])
+    job         = CGI.unescape(params[:job])
+    build       = CGI.unescape(params[:build])
+    postdata    = { 'description' => 'Under investigation' }
+    prefix      = "/job/#{job}/#{build}"
 
-    # We need to get the server URL from the configuration file, based on just
-    # the hostname, to keep the server's full URL (and all its special chars)
-    # out of the URI visible to the user. This whole thing is a hack and should
-    # be improved someday.
-    gen_config.views.each do |view|
-      view.servers.each do |config_server|
-        if config_server.url =~ /#{server}/
-          config_server.client.api_post_request("#{prefix}/submitDescription", postdata)
-          redirect "#{config_server.url}/#{prefix}/"
-        end
-      end
-    end
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.server(server_name) }
+      try { |server|
+        server.to_config['url']
+        server.client.api_post_request("#{prefix}/submitDescription", postdata)
+        redirect "#{server.to_config['url']}/#{prefix}/"
+      }
+    end)
 
     @errors = []
     @errors << "We couldn't find a server in our config for #{server}!"
