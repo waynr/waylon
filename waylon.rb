@@ -28,10 +28,10 @@ class Waylon < Sinatra::Application
     def manadic(monad)
       if monad.success?
         status 200
-        body(monad.value.to_json)
+        body(JSON.pretty_generate(monad.value))
       elsif monad.value.is_a? Waylon::Errors::NotFound
         status 404
-        body({"errors" => [monad.value.message]}.to_json)
+        body(JSON.pretty_generate({"errors" => [monad.value.message]}))
       else
         raise monad.value
       end
