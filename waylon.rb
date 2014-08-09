@@ -100,6 +100,22 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  get '/api/view/:view/jobs.json' do
+    view_name = CGI.unescape(params[:view])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try do |view|
+        view.servers.inject([]) do |jobs, server|
+          server.jobs.each do |job|
+            jobs << {'name' => job.name, 'server' => server.name, 'view' => view.name}
+          end
+          jobs
+        end
+      end
+    end)
+  end
+
   # API: gets job details for a particular job on a particular server
   get '/api/view/:view/server/:server/job/:job.json' do
     view_name   = CGI.unescape(params[:view])
