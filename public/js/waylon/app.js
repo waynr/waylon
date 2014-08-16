@@ -4,6 +4,7 @@ Notochord.JobModel = Backbone.Model.extend({
     defaults: {
         status: "unknown-job",
         investigating: false,
+        health: null,
     },
 
     initialize: function(attrs) {
@@ -53,6 +54,7 @@ Notochord.JobView = Backbone.View.extend({
         if (this.model) {
             this.model.on('change', this.render, this);
         }
+        this.weatherView = new Notochord.WeatherView({model: this.model});
     },
 
     render: function() {
@@ -64,6 +66,7 @@ Notochord.JobView = Backbone.View.extend({
         this.$el.removeClass();
         var newstyle = this.statToStyle(this.model.get('status'));
         this.$el.addClass(newstyle);
+        this.weatherView.setElement(this.$('img')).render();
         return this;
     },
 
@@ -84,6 +87,46 @@ Notochord.JobView = Backbone.View.extend({
                 break;
         }
         return newStyle;
+    },
+});
+
+Notochord.WeatherView = Backbone.View.extend({
+    el: 'img',
+
+    initialize: function(options) {
+        this.options = options || {};
+    },
+
+    render: function() {
+        var state = this.getState();
+
+        this.$el.attr('src', state.src);
+        this.$el.attr('alt', state.alt);
+        this.$el.attr('title', state.title);
+        return this;
+    },
+
+    getState: function() {
+        var state = {};
+
+        switch (parseInt(this.model.get('health'))) {
+            case 100:
+                state.src   = "/img/sun.png",
+                state.alt   = "[sun]",
+                state.title = "No recent builds failed";
+                break;
+            case 80:
+                state.src   = "/img/cloud.png",
+                state.alt   = "[cloud]",
+                state.title = "1 of the last 5 builds failed";
+                break;
+            case 60:
+                state.src   = "/img/umbrella.png",
+                state.alt   = "[umbrella]",
+                state.title = "2 or more of the last 5 builds failed";
+                break;
+        }
+        return state;
     },
 });
 
