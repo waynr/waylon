@@ -2,7 +2,7 @@ var Notochord = Notochord || {};
 
 Notochord.JobModel = Backbone.Model.extend({
     defaults: {
-        st: "unknown-job",
+        status: "unknown-job",
         investigating: false,
     },
 
@@ -27,12 +27,7 @@ Notochord.JobModel = Backbone.Model.extend({
 
     _reset: function(json) {
         var iter = function(value, key) {
-            if(key === "status") {
-                console.log("OMG");
-                this.set('st', value);
-            } else {
-                this.set(key, value);
-            }
+              this.set(key, value);
         };
 
         _.each(json, iter, this);
@@ -67,16 +62,14 @@ Notochord.JobView = Backbone.View.extend({
             )
         );
         this.$el.removeClass();
-        var newstyle = this.statToStyle(this.model.get('st'));
-        console.log("Setting style to " + newstyle);
+        var newstyle = this.statToStyle(this.model.get('status'));
         this.$el.addClass(newstyle);
         return this;
     },
 
-    statToStyle: function(st) {
+    statToStyle: function(status) {
         var newStyle;
-        console.log("current status is " + st);
-        switch (st) {
+        switch (status) {
             case "running":
                 newStyle = "building-job";
                 break;
