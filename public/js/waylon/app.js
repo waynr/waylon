@@ -97,26 +97,31 @@ var jobCollection = Backbone.Collection.extend({
 Notochord.JobCollection = new jobCollection();
 
 Notochord.AppView = Backbone.View.extend({
-    el: '#jobs',
+    el: '#radiator',
 
     template: [
-        '<tbody>',
-        '</tbody>',
+        '<div id="loading">',
+            '<span class="glyphicon glyphicon-refresh loadingIndicator"></span>',
+            '<p>Getting the latest data, just for you.</p>',
+        '</div>',
+        '<table id="jobs">',
+            '<tbody>',
+            '</tbody>',
+        '</table>',
     ].join(""),
 
     initialize: function(options) {
         this.options = options || {};
         this.view = options.view;
 
-        this.tbody = this.$("tbody");
-        this.tbody.html('<tr><td>WOO</td></tr>');
+        this.tbody   = this.$("#jobs tbody");
 
         this.listenTo(Notochord.JobCollection, 'add', this.addJob);
     },
 
     run: function() {
         Notochord.JobCollection.url = '/api/view/' + this.view + '/jobs.json';
-        Notochord.JobCollection.fetch();
+        Notochord.JobCollection.fetch().done(function() { $("#loading").hide(); });
     },
 
     addJob: function(job) {
