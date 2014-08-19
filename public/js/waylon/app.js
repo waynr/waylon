@@ -133,7 +133,7 @@ Notochord.InvestigateMenuView = Backbone.View.extend({
     el: 'div',
 
     events: {
-        'click [role=menuitem]': 'setDesc',
+        'click [action]': 'setDesc',
     },
 
     initialize: function(options) {
@@ -141,22 +141,36 @@ Notochord.InvestigateMenuView = Backbone.View.extend({
     },
 
     template: Handlebars.compile([
-        '{{#if investigating}}',
+        '{{#if failure}}',
         '<div class="dropdown pull-right">',
             '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">',
-                'Investigating <span class="caret">',
+                '{{#if investigating}}',
+                    'Under investigation',
+                '{{else}}',
+                    'Investigate',
+                '{{/if}}',
+                '&nbsp;<span class="caret"></span>',
             '</button>',
             '<ul class="dropdown-menu" role="menu">',
                 '<span>{{description}}</span>',
                 '<li class="divider" />',
-                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mark as under investigation</a></li>',
+                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="investigate">Mark as under investigation</a></li>',
+                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="infra">Mark as infrastructure issue</a></li>',
+                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="legit">Mark as legitimate failure</a></li>',
+                '<li class="divider" />',
+                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="uninvestigate">Mark as not under investigation</a></li>',
             '</ul>',
         '</div>',
         '{{/if}}',
     ].join("")),
 
     render: function() {
-        this.$el.html(this.template(this.model.attributes));
+        var attributes = $.extend({}, this.model.attributes);
+        if (this.model.get('status') === 'failure') {
+            attributes.failure = true;
+        }
+
+        this.$el.html(this.template(attributes));
         return this;
     },
 
