@@ -51,12 +51,14 @@ class Waylon
       end
     end
 
-    def under_investigation?
+    def investigating?
       # Assume the job is in the failed state.
+      !!(description =~ /under investigation/i)
+    end
 
-      last_build_descr = @client.job.get_build_details(@name, last_build_num)['description']
-
-      !!(last_build_descr =~ /under investigation/i)
+    def description
+      # Assume the job is in the failed state.
+      @client.job.get_build_details(@name, last_build_num)['description']
     end
 
     def last_build_num
@@ -72,7 +74,8 @@ class Waylon
         'eta'            => (eta if status == 'running'),
         'health'         => @job_details['healthReport'][0]['score'],
         'last_build_num' => last_build_num,
-        'investigating'  => under_investigation?
+        'investigating'  => investigating?,
+        'description'    => description,
       }.reject{ |k, v| v.nil? }
     end
   end

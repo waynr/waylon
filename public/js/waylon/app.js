@@ -2,7 +2,7 @@ var Notochord = Notochord || {};
 
 Notochord.JobModel = Backbone.Model.extend({
     defaults: {
-        status: "unknown-job",
+        status: "unknown",
         investigating: false,
         health: null,
     },
@@ -42,10 +42,8 @@ Notochord.JobView = Backbone.View.extend({
         '<td class=jobinfo>',
             '<img class="weather" />',
             '<a href="{{url}}">{{name}}</a>',
-            '{{#if investigating}}',
-                '<div class="job_action">',
-                '</div>',
-            '{{/if}}',
+            '<div class="job_action">',
+            '</div>',
         '</td>',
     ].join("")),
 
@@ -55,18 +53,18 @@ Notochord.JobView = Backbone.View.extend({
             this.model.on('change', this.render, this);
         }
         this.weatherView = new Notochord.WeatherView({model: this.model});
+        this.investigateMenuView = new Notochord.InvestigateMenuView({model: this.model});
     },
 
     render: function() {
-        this.$el.html(
-            this.template(
-                this.model.attributes
-            )
-        );
-        this.$el.removeClass();
         var newstyle = this.statToStyle(this.model.get('status'));
+        this.$el.removeClass();
         this.$el.addClass(newstyle);
-        this.weatherView.setElement(this.$('img')).render();
+
+        this.$el.html(this.template(this.model.attributes));
+
+        this.weatherView.setElement(this.$('img.weather')).render();
+        this.investigateMenuView.setElement(this.$('div.job_action')).render();
         return this;
     },
 
@@ -127,6 +125,41 @@ Notochord.WeatherView = Backbone.View.extend({
                 break;
         }
         return state;
+    },
+});
+
+Notochord.InvestigateMenuView = Backbone.View.extend({
+    el: 'div',
+
+    events: {
+        'click [role=menuitem]': 'setDesc',
+    },
+
+    initialize: function(options) {
+        this.options = options || {};
+    },
+
+    template: Handlebars.compile([
+        '{{#if investigating}}',
+        '<div class="dropdown pull-right">',
+            '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">',
+                'Investigating <span class="caret">',
+            '</button>',
+            '<ul class="dropdown-menu" role="menu">',
+                '<span>{{description}}</span>',
+                '<li class="divider" />',
+                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mark as under investigation</a></li>',
+            '</ul>',
+        '</div>',
+        '{{/if}}',
+    ].join("")),
+
+    render: function() {
+        this.$el.html(this.template(this.model.attributes));
+        return this;
+    },
+
+    setDesc: function(event) {
     },
 });
 
