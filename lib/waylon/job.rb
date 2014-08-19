@@ -4,13 +4,17 @@ class Waylon
 
     attr_reader :name
     attr_reader :client
-    attr_reader :job_details
 
     def initialize(name, client)
       @name   = name
       @client = client
 
       @job_details = {}
+    end
+
+    def job_details
+      query! if @job_details.empty?
+      @job_details
     end
 
     def query!
@@ -77,6 +81,18 @@ class Waylon
         'investigating'  => investigating?,
         'description'    => description,
       }.reject{ |k, v| v.nil? }
+    end
+
+    def investigate_build!(build = nil)
+      describe_build!("Under investigation", build)
+    end
+
+    def describe_build!(msg, build = nil)
+      build  ||= last_build_num
+      prefix   = "/job/#{@name}/#{build}"
+      postdata = { 'description' => msg }
+
+      client.api_post_request("#{prefix}/submitDescription", postdata)
     end
   end
 end
