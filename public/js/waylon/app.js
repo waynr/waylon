@@ -119,6 +119,7 @@ Notochord.WeatherView = Backbone.View.extend({
                 state.title = "1 of the last 5 builds failed";
                 break;
             case 60:
+            default:
                 state.src   = "/img/umbrella.png",
                 state.alt   = "[umbrella]",
                 state.title = "2 or more of the last 5 builds failed";
