@@ -9,6 +9,7 @@ _.extend(Notochord.App.prototype, {
     initialize: function(options) {
         this.options  = options || {};
         this.radiator = new Notochord.RadiatorView({view: this.options.view});
+        this.rollup = new Notochord.StatsRollupView({});
     },
 
     run: function() {

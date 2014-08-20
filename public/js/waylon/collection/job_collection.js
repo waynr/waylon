@@ -2,9 +2,14 @@ var Notochord = Notochord || {};
 
 var jobCollection = Backbone.Collection.extend({
     model: Notochord.JobModel,
-    comparator: function(job) {
-        return job.get('status');
-    }
+
+    count: function(status) {
+        var matching = this.filter(function(job) {
+            return job.get('status') === status;
+        });
+
+        return _.size(matching);
+    },
 });
 
 Notochord.JobCollection = new jobCollection();
