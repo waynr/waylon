@@ -9,6 +9,11 @@ Notochord.JobView = Backbone.View.extend({
             '<a href="{{url}}">{{name}}</a>',
             '<div class="job_action">',
             '</div>',
+            '{{#if progress_pct}}',
+                '<div class="progress">',
+                    '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{progress_pct}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_pct}}%" />',
+                '</div>',
+            '{{/if}}',
         '</td>',
     ].join("")),
 
@@ -17,7 +22,8 @@ Notochord.JobView = Backbone.View.extend({
         if (this.model) {
             this.model.on('change', this.render, this);
         }
-        this.weatherView = new Notochord.WeatherView({model: this.model});
+        this.weatherView         = new Notochord.WeatherView({model: this.model});
+        this.jobProgressView     = new Notochord.JobProgressView({model: this.model});
         this.investigateMenuView = new Notochord.InvestigateMenuView({model: this.model});
     },
 
@@ -29,7 +35,15 @@ Notochord.JobView = Backbone.View.extend({
         this.$el.html(this.template(this.model.attributes));
 
         this.weatherView.setElement(this.$('img.weather')).render();
-        this.investigateMenuView.setElement(this.$('div.job_action')).render();
+
+        switch (this.model.get('status')) {
+            case 'running':
+                this.jobProgressView.setElement(this.$('div.job_action')).render();
+                break;
+            case 'failure':
+                this.investigateMenuView.setElement(this.$('div.job_action')).render();
+                break;
+        }
         return this;
     },
 
