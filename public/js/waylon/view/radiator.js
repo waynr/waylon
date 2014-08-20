@@ -31,5 +31,12 @@ Notochord.RadiatorView = Backbone.View.extend({
         var view = new Notochord.JobView({model: job});
         this.tbody.append(view.render().el);
     },
-});
 
+    show: function() {
+        this.$("#jobs").show();
+    },
+
+    hide: function() {
+        this.$("#jobs").hide();
+    },
+});
