@@ -20,16 +20,22 @@ Notochord.RadiatorView = Backbone.View.extend({
 
         this.tbody   = this.$("#jobs tbody");
 
-        this.listenTo(Notochord.JobCollection, 'add', this.addJob);
+        this.listenTo(Notochord.JobCollection, 'change:status', _.debounce(this.render, 500));
     },
 
     doneLoading: function() {
         this.$("#loading").hide();
+        this.render();
     },
 
-    addJob: function(job) {
-        var view = new Notochord.JobView({model: job});
-        this.tbody.append(view.render().el);
+    render: function() {
+        var jobs = Notochord.JobCollection.map(function(model) {
+            var view = new Notochord.JobView({model: model});
+            return view.render().el;
+        });
+
+        this.tbody.html(jobs);
+        return this;
     },
 
     show: function() {
