@@ -15,6 +15,11 @@ _.extend(Waylon.App.prototype, {
     },
 
     run: function() {
+        this.setup();
+        setInterval(this.refresh, (60 * 1000));
+    },
+
+    setup: function() {
         Waylon.JobCollection.url = '/api/view/' + this.options.view + '/jobs.json';
         Waylon.JobCollection.fetch({
             context: this,
@@ -24,4 +29,10 @@ _.extend(Waylon.App.prototype, {
             },
         });
     },
+
+    refresh: function() {
+        Waylon.JobCollection.each(function(job) {
+            job.query();
+        });
+    }
 });
