@@ -1,21 +1,21 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.NirvanaView = Backbone.View.extend({
+Waylon.NirvanaView = Backbone.View.extend({
     el: 'body',
 
     initialize: function(options) {
         this.options = options || {};
         this.radiator = options.radiator;
 
-        this.listenTo(Notochord.JobCollection, 'change:status', this.check);
+        this.listenTo(Waylon.JobCollection, 'change:status', this.check);
     },
 
     check: function() {
         var ok = true;
 
-        ok = ok && Notochord.JobCollection.count('running') === 0;
-        ok = ok && Notochord.JobCollection.count('failure') === 0;
-        ok = ok && Notochord.JobCollection.count('unknown') === 0;
+        ok = ok && Waylon.JobCollection.count('running') === 0;
+        ok = ok && Waylon.JobCollection.count('failure') === 0;
+        ok = ok && Waylon.JobCollection.count('unknown') === 0;
 
         if (ok) {
             this.begin();

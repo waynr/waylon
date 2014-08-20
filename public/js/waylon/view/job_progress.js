@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.JobProgressView = Backbone.View.extend({
+Waylon.JobProgressView = Backbone.View.extend({
     el: 'div',
 
     initialize: function(options) {

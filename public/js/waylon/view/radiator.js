@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.RadiatorView = Backbone.View.extend({
+Waylon.RadiatorView = Backbone.View.extend({
     el: '#radiator',
 
     template: [
@@ -20,7 +20,7 @@ Notochord.RadiatorView = Backbone.View.extend({
 
         this.tbody   = this.$("#jobs tbody");
 
-        this.listenTo(Notochord.JobCollection, 'change:status', _.debounce(this.render, 500));
+        this.listenTo(Waylon.JobCollection, 'change:status', _.debounce(this.render, 500));
     },
 
     doneLoading: function() {
@@ -29,8 +29,8 @@ Notochord.RadiatorView = Backbone.View.extend({
     },
 
     render: function() {
-        var jobs = Notochord.JobCollection.map(function(model) {
-            var view = new Notochord.JobView({model: model});
+        var jobs = Waylon.JobCollection.map(function(model) {
+            var view = new Waylon.JobView({model: model});
             return view.render().el;
         });
 

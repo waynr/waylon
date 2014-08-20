@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.JobView = Backbone.View.extend({
+Waylon.JobView = Backbone.View.extend({
     tagName: 'tr',
 
     template: Handlebars.compile([
@@ -22,9 +22,9 @@ Notochord.JobView = Backbone.View.extend({
         if (this.model) {
             this.model.on('change', this.render, this);
         }
-        this.weatherView         = new Notochord.WeatherView({model: this.model});
-        this.jobProgressView     = new Notochord.JobProgressView({model: this.model});
-        this.investigateMenuView = new Notochord.InvestigateMenuView({model: this.model});
+        this.weatherView         = new Waylon.WeatherView({model: this.model});
+        this.jobProgressView     = new Waylon.JobProgressView({model: this.model});
+        this.investigateMenuView = new Waylon.InvestigateMenuView({model: this.model});
     },
 
     render: function() {

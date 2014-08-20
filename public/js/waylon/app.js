@@ -1,22 +1,22 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.App = function(options) {
+Waylon.App = function(options) {
     this.initialize.apply(this, [options]);
 };
 
-_.extend(Notochord.App.prototype, {
+_.extend(Waylon.App.prototype, {
 
     initialize: function(options) {
         this.options  = options || {};
 
-        this.radiator = new Notochord.RadiatorView({view: this.options.view});
-        this.rollup   = new Notochord.StatsRollupView({});
-        this.nirvana  = new Notochord.NirvanaView({radiator: this.radiator});
+        this.radiator = new Waylon.RadiatorView({view: this.options.view});
+        this.rollup   = new Waylon.StatsRollupView({});
+        this.nirvana  = new Waylon.NirvanaView({radiator: this.radiator});
     },
 
     run: function() {
-        Notochord.JobCollection.url = '/api/view/' + this.options.view + '/jobs.json';
-        Notochord.JobCollection.fetch({
+        Waylon.JobCollection.url = '/api/view/' + this.options.view + '/jobs.json';
+        Waylon.JobCollection.fetch({
             context: this,
             success: function(model, response, options) {
                 var radiator = options.context.radiator;

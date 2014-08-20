@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.InvestigateMenuView = Backbone.View.extend({
+Waylon.InvestigateMenuView = Backbone.View.extend({
     el: 'div',
 
     events: {

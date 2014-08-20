@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.JobModel = Backbone.Model.extend({
+Waylon.JobModel = Backbone.Model.extend({
     defaults: {
         status: "unknown",
         investigating: false,

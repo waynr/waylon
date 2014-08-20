@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.WeatherView = Backbone.View.extend({
+Waylon.WeatherView = Backbone.View.extend({
     el: 'img',
 
     initialize: function(options) {

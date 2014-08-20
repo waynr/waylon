@@ -1,7 +1,7 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
 var jobCollection = Backbone.Collection.extend({
-    model: Notochord.JobModel,
+    model: Waylon.JobModel,
 
     initialize: function() {
         this.listenTo(this, 'change:status', _.debounce(this.sort, 450));
@@ -20,4 +20,4 @@ var jobCollection = Backbone.Collection.extend({
     },
 });
 
-Notochord.JobCollection = new jobCollection();
+Waylon.JobCollection = new jobCollection();

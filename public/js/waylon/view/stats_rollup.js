@@ -1,6 +1,6 @@
-var Notochord = Notochord || {};
+var Waylon = Waylon || {};
 
-Notochord.StatsRollupView = Backbone.View.extend({
+Waylon.StatsRollupView = Backbone.View.extend({
 
     el: '#stats-rollup',
 
@@ -16,17 +16,17 @@ Notochord.StatsRollupView = Backbone.View.extend({
 
     initialize: function(options) {
         this.options = options || {};
-        this.listenTo(Notochord.JobCollection, 'remove', this.render);
-        this.listenTo(Notochord.JobCollection, 'change:status', this.render);
+        this.listenTo(Waylon.JobCollection, 'remove', this.render);
+        this.listenTo(Waylon.JobCollection, 'change:status', this.render);
     },
 
     render: function() {
         var attrs = {
-            successful: Notochord.JobCollection.count('success'),
-            building: Notochord.JobCollection.count('running'),
-            unknown: Notochord.JobCollection.count('unknown'),
-            failed: Notochord.JobCollection.count('failure'),
-            total: Notochord.JobCollection.size(),
+            successful: Waylon.JobCollection.count('success'),
+            building: Waylon.JobCollection.count('running'),
+            unknown: Waylon.JobCollection.count('unknown'),
+            failed: Waylon.JobCollection.count('failure'),
+            total: Waylon.JobCollection.size(),
         };
 
         this.$el.html(this.template(attrs));
