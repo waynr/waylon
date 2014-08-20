@@ -1,3 +1,8 @@
+
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g
+};
+
 var Notochord = Notochord || {};
 
 Notochord.JobModel = Backbone.Model.extend({
@@ -14,7 +19,7 @@ Notochord.JobModel = Backbone.Model.extend({
     query: function() {
         $.ajax({
             context: this,
-            url: this.url(),
+            url: this.baseurl() + ".json",
             dataType: "json",
             success: function(json) {
                 this._reset(json);
@@ -22,8 +27,8 @@ Notochord.JobModel = Backbone.Model.extend({
         });
     },
 
-    url: function() {
-        return "/api/view/" + this.get('view') + "/server/" + this.get('server') + "/job/" + this.get('name') + ".json";
+    baseurl: function() {
+        return _.template('/api/view/{{view}}/server/{{server}}/job/{{name}}', this.attributes);
     },
 
     _reset: function(json) {
@@ -32,6 +37,17 @@ Notochord.JobModel = Backbone.Model.extend({
         };
 
         _.each(json, iter, this);
+    },
+
+    describe: function(desc) {
+        $.ajax({
+            context: this,
+            type: 'POST',
+            url: this.baseurl() + '/describe',
+            dataType: "json",
+            data: {"desc": desc},
+        });
+
     },
 });
 
@@ -152,7 +168,13 @@ Notochord.InvestigateMenuView = Backbone.View.extend({
                 '&nbsp;<span class="caret"></span>',
             '</button>',
             '<ul class="dropdown-menu" role="menu">',
-                '<span>{{description}}</span>',
+                '<span>',
+                    '{{#if description}}',
+                        '{{description}}',
+                    '{{else}}',
+                        'Not yet investigated',
+                    '{{/if}}',
+                '</span>',
                 '<li class="divider" />',
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="investigate">Mark as under investigation</a></li>',
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="infra">Mark as infrastructure issue</a></li>',
@@ -175,6 +197,26 @@ Notochord.InvestigateMenuView = Backbone.View.extend({
     },
 
     setDesc: function(event) {
+        var action = $(event.target).attr('action');
+
+        var message;
+
+        switch(action) {
+            case 'investigate':
+                message = "Under investigation";
+                break;
+            case 'uninvestigate':
+                message = "";
+                break;
+            case 'infra':
+                message = "Marked as infrastructure";
+                break;
+            case 'legit':
+                message = "Marked as legitimate failure";
+                break;
+        }
+
+        this.model.describe(message);
     },
 });
 
