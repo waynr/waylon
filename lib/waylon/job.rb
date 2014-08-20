@@ -93,6 +93,8 @@ class Waylon
       postdata = { 'description' => msg }
 
       client.api_post_request("#{prefix}/submitDescription", postdata)
+
+      {"description" => msg}
     end
   end
 end
