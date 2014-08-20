@@ -3,6 +3,10 @@ var Waylon = Waylon || {};
 Waylon.WeatherView = Backbone.View.extend({
     el: 'img',
 
+    attributes: function() {
+        return { 'data-toggle': 'tooltip' }
+    },
+
     initialize: function(options) {
         this.options = options || {};
     },
@@ -13,6 +17,7 @@ Waylon.WeatherView = Backbone.View.extend({
         this.$el.attr('src', state.src);
         this.$el.attr('alt', state.alt);
         this.$el.attr('title', state.title);
+        this.$el.tooltip({'placement': 'bottom'});
         return this;
     },
 
