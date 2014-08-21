@@ -14,8 +14,8 @@ Waylon.JobProgressView = Backbone.View.extend({
     ].join("")),
 
     render: function() {
-
         this.$el.html(this.template(this.model.attributes));
+        this.$('span').tooltip({'placement': 'bottom'});
 
         return this;
     },
