@@ -101,7 +101,7 @@ div .dropdown {
     color: black;
 }
 
-.unknown-job    { background-color: #428bca; }
+.unknown-job    { background-color: #31b0d5; }
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
 .successful-job { background-color: #5cb85c; }
