@@ -28,12 +28,8 @@ Waylon.JobView = Backbone.View.extend({
     },
 
     render: function() {
-        var newstyle = this.statToStyle(this.model.get('status'));
-        this.$el.removeClass();
-        this.$el.addClass(newstyle);
-
+        this.$el.addClass(this.style());
         this.$el.html(this.template(this.model.attributes));
-
         this.weatherView.setElement(this.$('img.weather')).render();
 
         switch (this.model.get('status')) {
@@ -47,23 +43,17 @@ Waylon.JobView = Backbone.View.extend({
         return this;
     },
 
-    statToStyle: function(status) {
-        var newStyle;
-        switch (status) {
+    style: function() {
+        switch (this.model.get('status')) {
             case "running":
-                newStyle = "building-job";
-                break;
+                return "building-job";
             case "failure":
-                newStyle = "failed-job";
-                break;
+                return "failed-job";
             case "success":
-                newStyle = "successful-job";
-                break;
+                return "successful-job";
             default:
-                newStyle = "unknown-job";
-                break;
+                return "unknown-job";
         }
-        return newStyle;
     },
 });
 
