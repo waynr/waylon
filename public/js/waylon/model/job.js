@@ -42,6 +42,9 @@ Waylon.Models.Job = Backbone.Model.extend({
             url: this.baseurl() + '/describe',
             dataType: "json",
             data: {"desc": desc},
+            success: function() {
+                this.query();
+            },
         });
 
     },
