@@ -14,9 +14,9 @@ _.extend(Waylon.App.prototype, {
         this.options  = options || {};
         this.refresh_interval = options.refresh_interval || this.defaults.refresh_interval;
 
-        this.radiator = new Waylon.RadiatorView({view: this.options.view});
-        this.rollup   = new Waylon.StatsRollupView({});
-        this.nirvana  = new Waylon.NirvanaView({radiator: this.radiator});
+        this.radiator = new Waylon.Views.Radiator({view: this.options.view});
+        this.rollup   = new Waylon.Views.StatsRollup({});
+        this.nirvana  = new Waylon.Views.Nirvana({radiator: this.radiator});
     },
 
     run: function() {

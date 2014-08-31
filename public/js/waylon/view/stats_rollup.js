@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.StatsRollupView = Backbone.View.extend({
+Waylon.Views.StatsRollup = Backbone.View.extend({
 
     el: '#stats-rollup',
 

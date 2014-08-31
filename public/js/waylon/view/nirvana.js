@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.NirvanaView = Backbone.View.extend({
+Waylon.Views.Nirvana = Backbone.View.extend({
     el: 'body',
 
     initialize: function(options) {

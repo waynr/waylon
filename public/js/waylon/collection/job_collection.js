@@ -1,7 +1,7 @@
 var Waylon = Waylon || {};
 
 var jobCollection = Backbone.Collection.extend({
-    model: Waylon.JobModel,
+    model: Waylon.Models.Job,
 
     initialize: function() {
         this.listenTo(this, 'change:status', _.debounce(this.sort, 450));

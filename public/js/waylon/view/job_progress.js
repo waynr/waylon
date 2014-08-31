@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.JobProgressView = Backbone.View.extend({
+Waylon.Views.JobProgress = Backbone.View.extend({
     el: 'div',
 
     initialize: function(options) {

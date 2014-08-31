@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Models = Waylon.Models || {};
 
-Waylon.JobModel = Backbone.Model.extend({
+Waylon.Models.Job = Backbone.Model.extend({
     defaults: {
         status: "unknown",
         investigating: false,

@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.InvestigateMenuView = Backbone.View.extend({
+Waylon.Views.InvestigateMenu = Backbone.View.extend({
 
     // We specify the div and class because without this handled events can
     // propagate in unusual and confusing ways.

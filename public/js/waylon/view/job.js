@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.JobView = Backbone.View.extend({
+Waylon.Views.Job = Backbone.View.extend({
     tagName: 'tr',
 
     template: Handlebars.compile([
@@ -22,22 +23,22 @@ Waylon.JobView = Backbone.View.extend({
         if (this.model) {
             this.model.on('change', this.render, this);
         }
-        this.weatherView         = new Waylon.WeatherView({model: this.model});
-        this.jobProgressView     = new Waylon.JobProgressView({model: this.model});
-        this.investigateMenuView = new Waylon.InvestigateMenuView({model: this.model});
+        this.weather         = new Waylon.Views.Weather({model: this.model});
+        this.progress        = new Waylon.Views.JobProgress({model: this.model});
+        this.investigateMenu = new Waylon.Views.InvestigateMenu({model: this.model});
     },
 
     render: function() {
         this.$el.addClass(this.style());
         this.$el.html(this.template(this.model.attributes));
-        this.weatherView.setElement(this.$('img.weather')).render();
+        this.weather.setElement(this.$('img.weather')).render();
 
         switch (this.model.get('status')) {
             case 'running':
-                this.jobProgressView.setElement(this.$('div.job_action')).render();
+                this.progress.setElement(this.$('div.job_action')).render();
                 break;
             case 'failure':
-                this.investigateMenuView.setElement(this.$('div.job_action')).render();
+                this.investigateMenu.setElement(this.$('div.job_action')).render();
                 break;
         }
         return this;

@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.WeatherView = Backbone.View.extend({
+Waylon.Views.Weather = Backbone.View.extend({
     el: 'img',
 
     attributes: function() {

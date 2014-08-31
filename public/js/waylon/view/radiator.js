@@ -1,6 +1,7 @@
 var Waylon = Waylon || {};
+Waylon.Views = Waylon.Views || {};
 
-Waylon.RadiatorView = Backbone.View.extend({
+Waylon.Views.Radiator = Backbone.View.extend({
     el: '#radiator',
 
     template: [
@@ -30,7 +31,7 @@ Waylon.RadiatorView = Backbone.View.extend({
 
     render: function() {
         var jobs = Waylon.JobCollection.map(function(model) {
-            var view = new Waylon.JobView({model: model});
+            var view = new Waylon.Views.Job({model: model});
             return view.render().el;
         });
 
