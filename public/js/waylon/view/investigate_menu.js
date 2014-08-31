@@ -1,7 +1,10 @@
 var Waylon = Waylon || {};
 
 Waylon.InvestigateMenuView = Backbone.View.extend({
-    el: 'div',
+
+    // We specify the div and class because without this handled events can
+    // propagate in unusual and confusing ways.
+    el: 'div.job_action',
 
     events: {
         'click [action]': 'setDesc',
@@ -12,7 +15,6 @@ Waylon.InvestigateMenuView = Backbone.View.extend({
     },
 
     template: Handlebars.compile([
-        '{{#if failure}}',
         '<div class="dropdown pull-right">',
             '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">',
                 '{{#if investigating}}',
@@ -38,7 +40,6 @@ Waylon.InvestigateMenuView = Backbone.View.extend({
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="uninvestigate">Mark as not under investigation</a></li>',
             '</ul>',
         '</div>',
-        '{{/if}}',
     ].join("")),
 
     render: function() {
@@ -53,7 +54,6 @@ Waylon.InvestigateMenuView = Backbone.View.extend({
 
     setDesc: function(event) {
         var action = $(event.target).attr('action');
-
         var message;
 
         switch(action) {
