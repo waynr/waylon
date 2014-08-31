@@ -4,13 +4,17 @@ class Waylon
 
     attr_reader :name
     attr_reader :client
-    attr_reader :job_details
 
     def initialize(name, client)
       @name   = name
       @client = client
 
       @job_details = {}
+    end
+
+    def job_details
+      query! if @job_details.empty?
+      @job_details
     end
 
     def query!
@@ -51,12 +55,14 @@ class Waylon
       end
     end
 
-    def under_investigation?
+    def investigating?
       # Assume the job is in the failed state.
+      !!(description =~ /under investigation/i)
+    end
 
-      last_build_descr = @client.job.get_build_details(@name, last_build_num)['description']
-
-      !!(last_build_descr =~ /under investigation/i)
+    def description
+      # Assume the job is in the failed state.
+      @client.job.get_build_details(@name, last_build_num)['description']
     end
 
     def last_build_num
@@ -72,8 +78,23 @@ class Waylon
         'eta'            => (eta if status == 'running'),
         'health'         => @job_details['healthReport'][0]['score'],
         'last_build_num' => last_build_num,
-        'investigating'  => under_investigation?
+        'investigating'  => investigating?,
+        'description'    => description,
       }.reject{ |k, v| v.nil? }
+    end
+
+    def investigate_build!(build = nil)
+      describe_build!("Under investigation", build)
+    end
+
+    def describe_build!(msg, build = nil)
+      build  ||= last_build_num
+      prefix   = "/job/#{@name}/#{build}"
+      postdata = { 'description' => msg }
+
+      client.api_post_request("#{prefix}/submitDescription", postdata)
+
+      {"description" => msg}
     end
   end
 end

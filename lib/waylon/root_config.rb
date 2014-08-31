@@ -12,7 +12,7 @@ class Waylon
     def self.from_hash(hash)
       new.tap do |x|
         x.views  = hash['views'].map { |kvp| Waylon::View.from_hash(*kvp) }
-        x.app_config = Waylon::AppConfig.from_hash(hash['config'])
+        x.app_config = Waylon::AppConfig.from_hash(hash['config'] || {})
       end
     end
 

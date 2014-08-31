@@ -94,7 +94,14 @@ body {
 .building-job a, .failed-job a, .successful-job a, .unknown-job a {
     color: white;
 }
-.unknown-job    { background-color: #428bca; }
+
+div .dropdown {
+    font-size: 1em;
+    font-weight: normal;
+    color: black;
+}
+
+.unknown-job    { background-color: #31b0d5; }
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
 .successful-job { background-color: #5cb85c; }
@@ -147,4 +154,14 @@ body.nirvana .navbar-default .navbar-nav > .active > a,
 body.nirvana .navbar-default .navbar-nav > li > a:hover {
     background-image: none !important;
     background-color: #111 !important;
+}
+
+.dropdown-menu span {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.5em;
+    color: #777;
+    white-space: nowrap;
 }

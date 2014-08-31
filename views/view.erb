@@ -6,8 +6,9 @@
     <div id="stats-rollup" class="container stats-rollup">
         <h3>Successful <span id="successful-jobs" class="label label-success">?</span></h3>
         <h3>Building <span id="building-jobs" class="label label-warning">?</span></h3>
+        <h3>Building <span id="unknown-jobs" class="label label-info">?</span></h3>
         <h3>Failed <span id="failed-jobs" class="label label-danger">?</span></h3>
-        <h3>Total <span id="total-jobs" class="label label-info">?</span></h3>
+        <h3>Total <span id="total-jobs" class="label label-primary">?</span></h3>
     </div>
     <table class="table" id="jobs"><tbody></tbody></table>
 </div>
@@ -15,12 +16,30 @@
 <script src="/js/jquery-2.1.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/handlebars-1.3.0.min.js"></script>
-<script src="/js/waylon.js"></script>
+<script src="/js/underscore-1.6.0.min.js"></script>
+<script src="/js/backbone-1.1.2.min.js"></script>
+
+<script src="/js/waylon/settings.js"></script>
+
+<script src="/js/waylon/model/job.js"></script>
+
+<script src="/js/waylon/view/job.js"></script>
+<script src="/js/waylon/view/weather.js"></script>
+<script src="/js/waylon/view/investigate_menu.js"></script>
+<script src="/js/waylon/view/radiator.js"></script>
+<script src="/js/waylon/view/stats_rollup.js"></script>
+<script src="/js/waylon/view/nirvana.js"></script>
+<script src="/js/waylon/view/job_progress.js"></script>
+
+<script src="/js/waylon/collection/job_collection.js"></script>
+
+<script src="/js/waylon/app.js"></script>
+
 <script>
 var settings = {
-    refresh_interval: <%= gen_config.app_config.refresh_interval %>,
-    rebuild_interval: <%= gen_config.app_config.rebuild_interval %>,
     view: '<%= @view_name %>',
+    refresh_interval: '<%= gen_config.app_config.refresh_interval %>',
 };
-waylon.init(settings);
+var app = new Waylon.App(settings);
+app.run();
 </script>

@@ -4,6 +4,7 @@ require 'date'
 require 'jenkins_api_client'
 require 'yaml'
 require 'deterministic'
+require 'resolv'
 
 $LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
 
@@ -28,10 +29,10 @@ class Waylon < Sinatra::Application
     def manadic(monad)
       if monad.success?
         status 200
-        body(monad.value.to_json)
+        body(JSON.pretty_generate(monad.value))
       elsif monad.value.is_a? Waylon::Errors::NotFound
         status 404
-        body({"errors" => [monad.value.message]}.to_json)
+        body(JSON.pretty_generate({"errors" => [monad.value.message]}))
       else
         raise monad.value
       end
@@ -100,6 +101,22 @@ class Waylon < Sinatra::Application
     end)
   end
 
+  get '/api/view/:view/jobs.json' do
+    view_name = CGI.unescape(params[:view])
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try do |view|
+        view.servers.inject([]) do |jobs, server|
+          server.jobs.each do |job|
+            jobs << {'name' => job.name, 'server' => server.name, 'view' => view.name}
+          end
+          jobs
+        end
+      end
+    end)
+  end
+
   # API: gets job details for a particular job on a particular server
   get '/api/view/:view/server/:server/job/:job.json' do
     view_name   = CGI.unescape(params[:view])
@@ -111,6 +128,31 @@ class Waylon < Sinatra::Application
       try { |view| view.server(server_name) }
       try { |server| server.job(job_name) }
       try { |job| job.query!.to_hash }
+    end)
+  end
+
+
+  post '/api/view/:view/server/:server/job/:job/describe' do
+    view_name   = CGI.unescape(params[:view])
+    server_name = CGI.unescape(params[:server])
+    job_name    = CGI.unescape(params[:job])
+    desc        = CGI.unescape(params[:desc])
+
+    if !(desc.nil? or desc.empty?)
+      submitter = begin
+                    Resolv.getname(request.ip)
+                  rescue Resolv::ResolvError
+                    request.ip
+                  end
+
+      desc << " by #{submitter}"
+    end
+
+    manadic(Either.attempt_all(self) do
+      try { gen_config.view(view_name) }
+      try { |view| view.server(server_name) }
+      try { |server| server.job(job_name) }
+      try { |job| job.describe_build!(desc) }
     end)
   end
 
