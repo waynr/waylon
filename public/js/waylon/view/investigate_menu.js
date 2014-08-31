@@ -74,4 +74,3 @@ Waylon.InvestigateMenuView = Backbone.View.extend({
         this.model.describe(message);
     },
 });
-

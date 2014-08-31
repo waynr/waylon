@@ -36,6 +36,10 @@
 <script src="/js/waylon/app.js"></script>
 
 <script>
-var app = new Waylon.App({view: '<%= @view_name %>'});
+var settings = {
+    view: '<%= @view_name %>',
+    refresh_interval: '<%= gen_config.app_config.refresh_interval %>',
+};
+var app = new Waylon.App(settings);
 app.run();
 </script>
