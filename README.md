@@ -15,7 +15,20 @@ Waylon is a dashboard to display the status of your Jenkins builds.
   * Nirvana mode displays a calming image of Oregon if all your jobs are green
 
 ## Setup
-Clone the repo:
+Currently, v1.2.0 is considered stable and should work. We're still working on
+making this a production-ready app, and plan to release v2.0.0 shortly. v2.0.0
+should also be distributed via Rubygems.
+
+To clone the repo at v1.2.0:
+
+```
+git clone https://github.com/rji/waylon -b v1.2.0
+```
+
+Development is being done on master, which is also the default branch.
+Generally speaking, anything on master _should work_, even if it does have some
+bugs and broken or missing features. If you want to use the latest and
+greatest, or help with development, this is the place you want to be:
 
 ```
 git clone https://github.com/rji/waylon
