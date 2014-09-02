@@ -3,3 +3,4 @@
 logs/
 config/waylon.yml
 Gemfile.lock
+*.gem
