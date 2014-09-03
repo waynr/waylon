@@ -121,7 +121,7 @@ class Waylon < Sinatra::Application
       try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.server(server_name) }
       try { |server| server.job(job_name) }
-      try { |job| job.query!.to_hash }
+      try { |job| job.to_hash }
     end)
   end
 
