@@ -7,7 +7,11 @@ class Waylon
     def self.build(root_config)
       views = root_config.views.map do |vc|
         servers = vc.servers.map do |sc|
-          Waylon::Jenkins::Server::Memcached.new(sc)
+          if root_config.app_config.memcached_server
+            Waylon::Jenkins::Server::Memcached.new(sc, root_config.app_config.memcached_server)
+          else
+            Waylon::Jenkins::Server::REST.new(sc)
+          end
         end
         Waylon::Jenkins::View.new(vc).tap { |o| o.servers = servers }
       end

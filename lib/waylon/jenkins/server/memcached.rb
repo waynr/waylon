@@ -10,9 +10,9 @@ class Waylon
 
         attr_reader :memcache
 
-        def initialize(config)
-          super
-          @memcache = ::Memcached.new('./tmp/memcached.sock')
+        def initialize(config, memcached_server)
+          super(config)
+          @memcache = ::Memcached.new(memcached_server)
         end
 
         def job_names
