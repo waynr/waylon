@@ -1,5 +1,3 @@
-require 'jenkins_api_client'
-require 'jenkins_api_client/core_ext'
 require 'waylon/errors'
 require 'waylon/job'
 
@@ -18,7 +16,9 @@ class Waylon
       attr_reader :username
       attr_reader :password
 
-      attr_reader :client
+      attr_reader :job_names
+      attr_reader :view_names
+      attr_reader :nested_view_names
 
       def self.from_hash(name, values)
         o = new(name, values['url'], values['username'], values['password'])
@@ -39,11 +39,6 @@ class Waylon
         @url = url
         @username = username
         @password = password
-        @client   = JenkinsApi::Client.new(:server_url => @url,
-                                           :username   => @username,
-                                           :password   => @password,
-                                           :server_port => 443,
-                                           :ssl => true)
 
         @job_names = []
         @view_names = []
@@ -60,44 +55,6 @@ class Waylon
 
       def add_nested_view(name, nested)
         @nested_view_names[name] = nested
-      end
-
-      def jobs
-        if !@cached_jobs
-          names = []
-          names += @job_names
-
-          @view_names.each do |view_name|
-            names += @client.view.list_jobs(view_name)
-          end
-
-          @nested_view_names.each_pair do |view_name, nested|
-            nested.each do |nested_name|
-              names += @client.nested_view.list_nested_jobs(view_name, nested_name)
-            end
-          end
-
-          @cached_jobs = names.map { |view_name| Waylon::Job.new(view_name, @client) }
-        end
-        @cached_jobs
-      end
-
-      def verify_client!
-        @client.get_root  # Attempt a connection to `server`
-      end
-
-      def to_config
-        {
-          'name' => @name,
-          'url'  => @url,
-          'jobs' => @job_names.map(&:name)
-        }
-      end
-
-      def job(name)
-        jobs.find { |job| job.name == name }.tap do |x|
-          raise Waylon::Errors::NotFound, "Cannot find job named #{name}" if x.nil?
-        end
       end
     end
   end
