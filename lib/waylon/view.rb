@@ -28,7 +28,7 @@ class Waylon
 
     def server(name)
       @servers.find { |server| server.name == name }.tap do |x|
-        raise Waylon::Errors::NotFound "Cannot find server named #{name}" if x.nil?
+        raise Waylon::Errors::NotFound, "Cannot find server named #{name}" if x.nil?
       end
     end
   end
