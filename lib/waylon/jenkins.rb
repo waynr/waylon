@@ -1,12 +1,13 @@
-require 'waylon/jenkins/rest/server'
 class Waylon
   module Jenkins
     require 'waylon/jenkins/view'
     require 'waylon/jenkins/server'
+    require 'waylon/jenkins/job'
+
     def self.build(root_config)
       views = root_config.views.map do |vc|
         servers = vc.servers.map do |sc|
-          Waylon::Jenkins::Server.new(Waylon::Jenkins::REST::Server.new(sc))
+          Waylon::Jenkins::Server::Memcached.new(sc)
         end
         Waylon::Jenkins::View.new(vc).tap { |o| o.servers = servers }
       end

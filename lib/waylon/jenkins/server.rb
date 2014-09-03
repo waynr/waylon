@@ -1,29 +1,28 @@
 class Waylon
   module Jenkins
     class Server
+      require 'waylon/jenkins/server/rest'
+      require 'waylon/jenkins/server/memcached'
 
-      def initialize(impl)
-        @impl = impl
+      attr_reader :config
+
+      def initialize(config)
+        @config = config
       end
 
       def name
-        @impl.name
+        @config.name
       end
 
-      # @return [Array<Waylon::Jenkins::Job>]
-      def jobs
-        @impl.jobs
-      end
-
-      def verify_client!
-        @impl.verify_client!
+      def url
+        @config.url
       end
 
       def to_config
           {
-            'name' => @impl.name,
-            'url'  => @impl.url,
-            'jobs' => jobs.map(&:name)
+            'name' => name,
+            'url'  => url,
+            'jobs' => job_names,
           }
       end
 

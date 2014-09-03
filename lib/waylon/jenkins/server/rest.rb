@@ -4,14 +4,13 @@ require 'waylon/errors'
 
 class Waylon
   module Jenkins
-    module REST
-      class Server
+    class Server
+      class REST < Server
 
         attr_reader :client
-        attr_reader :config
 
         def initialize(config)
-          @config = config
+          super
           @client = JenkinsApi::Client.new(
             :server_url => @config.url,
             :username   => @config.username,
@@ -19,15 +18,7 @@ class Waylon
           )
         end
 
-        def name
-          @config.name
-        end
-
-        def url
-          @config.url
-        end
-
-        def jobs
+        def job_names
           names = []
           names += config.job_names
 
@@ -41,7 +32,11 @@ class Waylon
             end
           end
 
-          names.map { |view_name| Waylon::Job.new(view_name, @client) }
+          names
+        end
+
+        def jobs
+          job_names.map { |view_name| Waylon::Jenkins::Job::REST.new(view_name, self) }
         end
 
         def verify_client!

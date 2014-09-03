@@ -1,5 +1,4 @@
 require 'waylon/errors'
-require 'waylon/job'
 
 class Waylon
   module Config
