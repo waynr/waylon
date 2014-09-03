@@ -1,0 +1,2 @@
+web: bundle exec shotgun -p $PORT
+memcache: memcached -s ./tmp/memcached.sock
