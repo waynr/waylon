@@ -10,7 +10,7 @@ $LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
 
 
 class Waylon < Sinatra::Application
-  require 'waylon/root_config'
+  require 'waylon/config'
   include Deterministic
 
   helpers do
@@ -18,7 +18,7 @@ class Waylon < Sinatra::Application
     def gen_config
       root = File.dirname(__FILE__)
       config = YAML.load_file(File.join(root, 'config/waylon.yml'))
-      Waylon::RootConfig.from_hash(config)
+      Waylon::Config::RootConfig.from_hash(config)
     end
 
     # Generate a list of views
