@@ -1,5 +1,10 @@
 require 'waylon/errors'
 class Waylon
+  # This class represents a specific Jenkins job. It can retrieve the status of
+  # the latest job, the progress of the job if it is currently running, and
+  # retrieve and set the last build description.
+  #
+  # @api private
   class Job
 
     attr_reader :name

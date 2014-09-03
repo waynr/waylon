@@ -1,4 +1,7 @@
 class Waylon
+  # This class represents the configuration for the Waylon web app.
+  #
+  # @api private
   class AppConfig
 
     attr_accessor :refresh_interval

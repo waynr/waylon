@@ -2,6 +2,12 @@ require 'jenkins_api_client'
 require 'waylon/errors'
 
 class Waylon
+  # A server represents the configuration of a Jenkins server, and lists the
+  # jobs and views that should be displayed from this server. It may include
+  # user credentials to allow end users to update the most recent job
+  # description.
+  #
+  # @api private
   class Server
     require 'waylon/job'
 

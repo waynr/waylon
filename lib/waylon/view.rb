@@ -2,6 +2,10 @@ require 'waylon/server'
 require 'waylon/errors'
 
 class Waylon
+  # This class represents the configuration for a specific Waylon view. It
+  # contains a set of servers that contain Jenkins views and jobs.
+  #
+  # @api private
   class View
     attr_reader :name
     attr_accessor :servers
