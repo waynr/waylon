@@ -103,7 +103,7 @@ class Waylon
           }
 
           if built?
-            h.merge({
+            h.merge!({
               'last_build_num' => last_build_num,
               'investigating'  => investigating?,
               'description'    => description,
@@ -112,7 +112,7 @@ class Waylon
           end
 
           if status == 'running'
-            h.merge({
+            h.merge!({
               'progress_pct' => progress_pct,
               'eta'          => eta,
             })
