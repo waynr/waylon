@@ -15,19 +15,19 @@ class Waylon
         end
 
         def job_details
-          cache("job-#{name}-details") { super }
+          @job_details ||= cache("job-#{name}-details") { super }
         end
 
         def est_duration
-          cache("job-#{name}-est-duration") { super }
+          @est_duration ||= cache("job-#{name}-est-duration") { super }
         end
 
         def progress_pct
-          cache("job-#{name}-progress-pct") { super }
+          @progress_pct ||= cache("job-#{name}-progress-pct") { super }
         end
 
         def description
-          cache("job-#{name}-description") { super }
+          @description ||= cache("job-#{name}-description") { super }
         end
       end
     end
