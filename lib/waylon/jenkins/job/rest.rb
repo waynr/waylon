@@ -87,7 +87,12 @@ class Waylon
 
         # @todo don't assume the job has ever been built
         def health
-          job_details['healthReport'][0]['score']
+          reports = job_details['healthReport']
+          if (reports && !reports.empty?)
+            reports[0]['score']
+          else
+            100
+          end
         end
 
         def url
