@@ -10,20 +10,10 @@ class Waylon
         def initialize(name, server)
           super
           @client = @server.client
-
-          @job_details = {}
         end
 
         def job_details
-          query! if @job_details.empty?
-          @job_details
-        end
-
-        def query!
-          @job_details = client.job.list_details(@name)
-          self
-        rescue JenkinsApi::Exceptions::NotFound
-          raise Waylon::Errors::NotFound
+          @job_details ||= query!
         end
 
         def status
@@ -98,6 +88,15 @@ class Waylon
 
           {"description" => msg}
         end
+
+        private
+
+        def query!
+          client.job.list_details(@name)
+        rescue JenkinsApi::Exceptions::NotFound
+          raise Waylon::Errors::NotFound
+        end
+
       end
     end
   end
