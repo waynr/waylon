@@ -2,6 +2,7 @@ class Waylon
   module Jenkins
     module Memcached
       def cache(memcache_key, ttl: 60, &block)
+        memcache_key.gsub!(/\s/, '-')
         raise ArgumentError, "##{__method__} requires a block" unless block_given?
         @memcache.get(memcache_key).tap do
           puts "cache hit on #{memcache_key.inspect}"
