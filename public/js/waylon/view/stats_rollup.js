@@ -8,10 +8,12 @@ Waylon.Views.StatsRollup = Backbone.View.extend({
     className: "container stats-rollup",
 
     template: Handlebars.compile([
-        '<h3>Successful <span id="successful-jobs" class="label label-success">{{successful}}</span></h3>',
-        '<h3>Building   <span id="building-jobs" class="label label-warning">{{building}}</span></h3>',
-        '<h3>Unknown    <span id="unknown-jobs" class="label label-info">{{unknown}}</span></h3>',
         '<h3>Failed     <span id="failed-jobs" class="label label-danger">{{failed}}</span></h3>',
+        '<h3>Disabled   <span id="disabled-jobs" class="label label-disabled">{{disabled}}</span></h3>',
+        '<h3>Aborted    <span id="aborted-jobs" class="label label-info">{{aborted}}</span></h3>',
+        '<h3>Unknown    <span id="unknown-jobs" class="label label-info">{{unknown}}</span></h3>',
+        '<h3>Building   <span id="building-jobs" class="label label-warning">{{building}}</span></h3>',
+        '<h3>Successful <span id="successful-jobs" class="label label-success">{{successful}}</span></h3>',
         '<h3>Total      <span id="total-jobs" class="label label-primary">{{total}}</span></h3>',
     ].join("")),
 
@@ -26,6 +28,8 @@ Waylon.Views.StatsRollup = Backbone.View.extend({
             successful: Waylon.JobCollection.count('success'),
             building: Waylon.JobCollection.count('running'),
             unknown: Waylon.JobCollection.count('unknown'),
+            disabled: Waylon.JobCollection.count('disabled'),
+            aborted: Waylon.JobCollection.count('aborted'),
             failed: Waylon.JobCollection.count('failure'),
             total: Waylon.JobCollection.size(),
         };
