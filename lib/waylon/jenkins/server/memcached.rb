@@ -10,13 +10,13 @@ class Waylon
 
         attr_reader :memcache
 
-        def initialize(config, memcached_server)
-          super(config)
+        def initialize(config, view, memcached_server)
+          super(config, view)
           @memcache = ::Memcached.new(memcached_server)
         end
 
         def job_names
-          cache("server-#{name}-job-names") { super }
+          cache("view-#{@view.name}-server-#{name}-job-names") { super }
         end
 
         def jobs

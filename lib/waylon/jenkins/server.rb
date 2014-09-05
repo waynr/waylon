@@ -6,8 +6,9 @@ class Waylon
 
       attr_reader :config
 
-      def initialize(config)
+      def initialize(config, view)
         @config = config
+        @view   = view
       end
 
       def name

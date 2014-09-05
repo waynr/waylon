@@ -9,7 +9,7 @@ class Waylon
 
         attr_reader :client
 
-        def initialize(config)
+        def initialize(config, view)
           super
           @client = JenkinsApi::Client.new(
             :server_url => @config.url,
