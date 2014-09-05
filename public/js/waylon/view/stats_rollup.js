@@ -17,6 +17,9 @@ Waylon.Views.StatsRollup = Backbone.View.extend({
         '{{#if disabled}}',
             '<h3>Disabled <span id="disabled-jobs" class="label label-disabled">{{disabled}}</span></h3>',
         '{{/if}}',
+        '{{#if not_run}}',
+            '<h3>Not Run <span id="unknown-jobs" class="label label-disabled">{{not_run}}</span></h3>',
+        '{{/if}}',
         '{{#if unknown}}',
             '<h3>Unknown <span id="unknown-jobs" class="label label-info">{{unknown}}</span></h3>',
         '{{/if}}',
@@ -44,6 +47,7 @@ Waylon.Views.StatsRollup = Backbone.View.extend({
             unknown: Waylon.JobCollection.count('unknown'),
             disabled: Waylon.JobCollection.count('disabled'),
             aborted: Waylon.JobCollection.count('aborted'),
+            not_run: Waylon.JobCollection.count('not_run'),
             failed: Waylon.JobCollection.count('failure'),
             total: Waylon.JobCollection.size(),
         };

@@ -72,8 +72,10 @@ Waylon.Models.Job = Backbone.Model.extend({
                 return 9;
             case "disabled":
                 return 8;
-            case "unknown":
+            case "not_run":
                 return 7;
+            case "unknown":
+                return 6;
             case "running":
                 return 2;
             case "success":
