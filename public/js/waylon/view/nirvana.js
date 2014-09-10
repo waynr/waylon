@@ -14,7 +14,7 @@ Waylon.Views.Nirvana = Backbone.View.extend({
     check: function() {
         var ok = true;
 
-        var successful = Waylon.JobCollection.count('running');
+        var successful = Waylon.JobCollection.count('success');
         var total      = Waylon.JobCollection.size();
 
         if (successful === total) {
