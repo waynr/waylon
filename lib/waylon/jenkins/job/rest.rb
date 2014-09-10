@@ -121,9 +121,14 @@ class Waylon
               'progress_pct' => progress_pct,
               'eta'          => eta,
             })
+          else
+            h.merge!({
+              'progress_pct' => nil,
+              'eta'          => nil,
+            })
           end
 
-          h.reject { |k, v| v.nil? }
+          h
         end
 
         def investigate_build!(build = nil)
