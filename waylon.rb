@@ -10,7 +10,8 @@ $LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
 
 
 class Waylon < Sinatra::Application
-  require 'waylon/root_config'
+  require 'waylon/config'
+  require 'waylon/jenkins'
   include Deterministic
 
   helpers do
@@ -18,7 +19,7 @@ class Waylon < Sinatra::Application
     def gen_config
       root = File.dirname(__FILE__)
       config = YAML.load_file(File.join(root, 'config/waylon.yml'))
-      Waylon::RootConfig.from_hash(config)
+      Waylon::Config::RootConfig.from_hash(config)
     end
 
     # Generate a list of views
@@ -61,7 +62,7 @@ class Waylon < Sinatra::Application
     view_name = CGI.unescape(params[:view])
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
+      try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.to_config }
     end)
   end
@@ -71,7 +72,7 @@ class Waylon < Sinatra::Application
     view_name = CGI.unescape(params[:view])
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
+      try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.servers.map(&:name) }
     end)
   end
@@ -83,7 +84,7 @@ class Waylon < Sinatra::Application
     server_name = CGI.unescape(params[:server])
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
+      try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.server(server_name) }
       try { |server| server.to_config }
     end)
@@ -105,15 +106,8 @@ class Waylon < Sinatra::Application
     view_name = CGI.unescape(params[:view])
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
-      try do |view|
-        view.servers.inject([]) do |jobs, server|
-          server.jobs.each do |job|
-            jobs << {'name' => job.name, 'server' => server.name, 'view' => view.name}
-          end
-          jobs
-        end
-      end
+      try { Waylon::Jenkins.view(gen_config, view_name) }
+      try { |view| view.jobs }
     end)
   end
 
@@ -124,10 +118,10 @@ class Waylon < Sinatra::Application
     job_name    = CGI.unescape(params[:job])
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
+      try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.server(server_name) }
       try { |server| server.job(job_name) }
-      try { |job| job.query!.to_hash }
+      try { |job| job.to_hash }
     end)
   end
 
@@ -149,7 +143,7 @@ class Waylon < Sinatra::Application
     end
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
+      try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.server(server_name) }
       try { |server| server.job(job_name) }
       try { |job| job.describe_build!(desc) }
@@ -166,7 +160,7 @@ class Waylon < Sinatra::Application
     prefix      = "/job/#{job}/#{build}"
 
     manadic(Either.attempt_all(self) do
-      try { gen_config.view(view_name) }
+      try { Waylon::Jenkins.view(gen_config, view_name) }
       try { |view| view.server(server_name) }
       try { |server|
         server.to_config['url']

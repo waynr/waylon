@@ -79,6 +79,36 @@ I, [2014-05-15T10:38:08.425707 #41334]  INFO -- : worker=0 spawning...
 I, [2014-05-15T10:38:08.426279 #41334]  INFO -- : worker=1 spawning...
 ```
 
+## Memcached
+
+Waylon can use memcached to reduce the number of requests against Jenkins.
+Environments where many users are using Waylon or many jobs are displayed
+should use this caching to deduplicate requests made against the Jenkins API.
+
+To enable memcached, add the `memcached_server` setting to the `config` section
+of waylon.yml:
+
+```yaml
+---
+config:
+  refresh_interval: 30   # polling interval (in seconds)
+  rebuild_interval: 3600 # page redraw interval (in seconds)
+  memcached_server: "tmp/memcached.sock"
+```
+
+The default Procfile will start memcached to listen on the Unix socket "tmp/memcached.sock"
+for connections from Waylon. When run locally you should use Foreman to start up
+both Waylon and memcached.
+
+```
+$ bundle exec foreman start
+12:52:56 web.1      | started with pid 9032
+12:52:56 memcache.1 | started with pid 9033
+12:52:56 web.1      | [2014-09-04 12:52:56] INFO  WEBrick 1.3.1
+12:52:56 web.1      | [2014-09-04 12:52:56] INFO  ruby 2.1.1 (2014-02-24) [x86_64-linux]
+12:52:56 web.1      | [2014-09-04 12:52:56] INFO  WEBrick::HTTPServer#start: pid=9032 port=5000
+```
+
 ## Screenshots
 ![Waylon radiator screenshot (builds)](http://rogerignazio.com/projects/waylon/waylon-screenshot-builds.png)
 ![Waylon radiator screenshot (nirvana)](http://rogerignazio.com/projects/waylon/waylon-screenshot-nirvana.png)
