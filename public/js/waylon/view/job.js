@@ -52,6 +52,10 @@ Waylon.Views.Job = Backbone.View.extend({
                 return "failed-job";
             case "success":
                 return "successful-job";
+            case "disabled":
+                return "disabled-job";
+            case "not_run":
+                return "disabled-job";
             default:
                 return "unknown-job";
         }

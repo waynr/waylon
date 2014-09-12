@@ -17,14 +17,22 @@ class Waylon
         end
 
         def status
-          @client.job.color_to_status(@job_details['color'])
+          if disabled?
+            "disabled"
+          else
+            @client.job.color_to_status(job_details['color'])
+          end
         end
 
+        # @todo don't assume the job has ever been built
+        # @todo don't assume the job is running
         def est_duration
           # estimatedDuration is returned in ms and here we convert it to seconds
           client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=estimatedDuration')['estimatedDuration'] / 1000
         end
 
+        # @todo don't assume the job has ever been built
+        # @todo don't assume the job is running
         def progress_pct
           # Note that 'timestamp' available the Jenkins API is returned in ms
           start_time = client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=timestamp')['timestamp'] / 1000.0
@@ -34,6 +42,8 @@ class Waylon
           -1
         end
 
+        # @todo don't assume the job has ever been built
+        # @todo don't assume the job is running
         def eta
           # A build's 'duration' in the Jenkins API is only available
           # after it has completed. Using estimatedDuration and the
@@ -47,32 +57,78 @@ class Waylon
           end
         end
 
+        # @todo don't assume the job has ever been built
         def investigating?
           # Assume the job is in the failed state.
           !!(description =~ /under investigation/i)
         end
 
+        # @todo don't assume the job has ever been built
         def description
-          # Assume the job is in the failed state.
           @client.job.get_build_details(@name, last_build_num)['description']
         end
 
+        # Has this job ever been built?
+        # @return [Boolean]
+        def built?
+          !!(job_details['firstBuild'])
+        end
+
+        # Is this job disabled?
+        # @return [Boolean]
+        def disabled?
+          @disabled = job_details['color'] == "disabled"
+        end
+
+        # @todo don't assume the job has ever been built
         def last_build_num
           job_details['lastBuild']['number']
         end
 
+        # @todo don't assume the job has ever been built
+        def health
+          reports = job_details['healthReport']
+          if (reports && !reports.empty?)
+            reports[0]['score']
+          else
+            100
+          end
+        end
+
+        def url
+          job_details['url']
+        end
+
         def to_hash
-          {
-            'name'           => @name,
-            'url'            => job_details['url'],
-            'status'         => status,
-            'progress_pct'   => (progress_pct if status == 'running'),
-            'eta'            => (eta if status == 'running'),
-            'health'         => job_details['healthReport'][0]['score'],
-            'last_build_num' => last_build_num,
-            'investigating'  => investigating?,
-            'description'    => description,
-          }.reject{ |k, v| v.nil? }
+          h = {
+            'name'     => @name,
+            'url'      => url,
+            'built'    => built?,
+            'status'   => status,
+          }
+
+          if built?
+            h.merge!({
+              'last_build_num' => last_build_num,
+              'investigating'  => investigating?,
+              'description'    => description,
+              'health'         => health,
+            })
+          end
+
+          if status == 'running'
+            h.merge!({
+              'progress_pct' => progress_pct,
+              'eta'          => eta,
+            })
+          else
+            h.merge!({
+              'progress_pct' => nil,
+              'eta'          => nil,
+            })
+          end
+
+          h
         end
 
         def investigate_build!(build = nil)

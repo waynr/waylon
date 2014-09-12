@@ -86,12 +86,12 @@ body {
 .table tfoot > tr > td {
     border: none;
 }
-.building-job, .failed-job, .successful-job, .unknown-job {
+.building-job, .failed-job, .successful-job, .unknown-job, .disabled-job {
     color: white;
     font-size: 1.5em;
     font-weight: bold;
 }
-.building-job a, .failed-job a, .successful-job a, .unknown-job a {
+.building-job a, .failed-job a, .successful-job a, .unknown-job a, .disabled-job a {
     color: white;
 }
 
@@ -101,6 +101,9 @@ div .dropdown {
     color: black;
 }
 
+.label-disabled { background-color: #88A6AF; }
+
+.disabled-job   { background-color: #88A6AF; }
 .unknown-job    { background-color: #31b0d5; }
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
