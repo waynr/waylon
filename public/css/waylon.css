@@ -65,7 +65,8 @@ body {
     to   { -moz-transform: rotate(360deg); }
 }
 .stats-rollup {
-    padding: 10px 0 25px 0;
+    margin-bottom: 15px;
+    padding: 15px 0;
     text-align: center;
 }
 .stats-rollup > h3 {
@@ -137,6 +138,16 @@ div .dropdown {
     background-color: #d9534f;
 }
 
+.dropdown-menu span {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.5em;
+    color: #777;
+    white-space: nowrap;
+}
+
 /* Nirvana mode */
 body.nirvana {
     /* background-image set by jQuery */
@@ -145,8 +156,8 @@ body.nirvana {
     background-position: center;
 }
 body.nirvana .navbar-fixed-top {
-    background: #333;
-    opacity: 0.5;
+    background: #111;
+    opacity: 0.6;
 }
 body.nirvana .navbar-default .navbar-nav > li > a {
     background: inherit;
@@ -156,15 +167,11 @@ body.nirvana .navbar-default .navbar-nav > li > a {
 body.nirvana .navbar-default .navbar-nav > .active > a,
 body.nirvana .navbar-default .navbar-nav > li > a:hover {
     background-image: none !important;
-    background-color: #111 !important;
+    background-color: black !important;
 }
-
-.dropdown-menu span {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: normal;
-    line-height: 1.5em;
-    color: #777;
-    white-space: nowrap;
+body.nirvana #stats-rollup {
+    background: #111;
+    border-radius: 10px;
+    color: white;
+    opacity: 0.6;
 }
