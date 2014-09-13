@@ -148,9 +148,10 @@ div .dropdown {
 /* Nirvana mode */
 body.nirvana {
     /* background-image set by jQuery */
-    background-repeat: no-repeat;
     background-attachment: fixed;
+    background-repeat: no-repeat;
     background-position: center;
+    background-size: cover;
 }
 body.nirvana .navbar-fixed-top {
     background: #111;
