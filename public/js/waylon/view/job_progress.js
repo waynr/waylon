@@ -9,14 +9,14 @@ Waylon.Views.JobProgress = Backbone.View.extend({
     },
 
     template: Handlebars.compile([
-        '<span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Estimated time remaining" />',
+        '<img class="job-status" src="/img/eta.png" data-toggle="tooltip" title="Estimated time remaining" alt="ETA" />',
         '&nbsp;',
         '{{eta}}',
     ].join("")),
 
     render: function() {
         this.$el.html(this.template(this.model.attributes));
-        this.$('span').tooltip({'placement': 'bottom'});
+        this.$('img').tooltip({'placement': 'bottom'});
 
         return this;
     },
