@@ -65,7 +65,8 @@ body {
     to   { -moz-transform: rotate(360deg); }
 }
 .stats-rollup {
-    padding: 10px 0 25px 0;
+    margin-bottom: 15px;
+    padding: 15px 0;
     text-align: center;
 }
 .stats-rollup > h3 {
@@ -108,15 +109,16 @@ div .dropdown {
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
 .successful-job { background-color: #5cb85c; }
-.weather        { margin: 0 5px;             }
+.job-status, .weather {
+    height: 30px;
+    width: 30px;
+}
+.job-status { margin: 0 5px;        }
+.weather    { margin: 0 13px 0 5px; }
 .job_action   { float: right; }
 .job_action a { color: black; }
-.infinity {
-    color: #d9534f;
-    font-size: 1.75em;
-    line-height: 50%
-}
-.progress, .progress-bar, .progress-bar-danger {
+
+.progress, .progress-bar {
     background-image: none;
     background-repeat: no-repeat;
     filter: none;
@@ -133,31 +135,6 @@ div .dropdown {
 .progress-bar {
     background-color: #fff;
 }
-.progress-bar-danger {
-    background-color: #d9534f;
-}
-
-/* Nirvana mode */
-body.nirvana {
-    /* background-image set by jQuery */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-}
-body.nirvana .navbar-fixed-top {
-    background: #333;
-    opacity: 0.5;
-}
-body.nirvana .navbar-default .navbar-nav > li > a {
-    background: inherit;
-    color: white !important;
-    text-shadow: none;
-}
-body.nirvana .navbar-default .navbar-nav > .active > a,
-body.nirvana .navbar-default .navbar-nav > li > a:hover {
-    background-image: none !important;
-    background-color: #111 !important;
-}
 
 .dropdown-menu span {
     display: block;
@@ -167,4 +144,33 @@ body.nirvana .navbar-default .navbar-nav > li > a:hover {
     line-height: 1.5em;
     color: #777;
     white-space: nowrap;
+}
+
+/* Nirvana mode */
+body.nirvana {
+    /* background-image set by jQuery */
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+body.nirvana .navbar-fixed-top {
+    background: #111;
+    opacity: 0.6;
+}
+body.nirvana .navbar-default .navbar-nav > li > a {
+    background: inherit;
+    color: white !important;
+    text-shadow: none;
+}
+body.nirvana .navbar-default .navbar-nav > .active > a,
+body.nirvana .navbar-default .navbar-nav > li > a:hover {
+    background-image: none !important;
+    background-color: black !important;
+}
+body.nirvana #stats-rollup {
+    background: #111;
+    border-radius: 10px;
+    color: white;
+    opacity: 0.6;
 }
