@@ -109,11 +109,12 @@ div .dropdown {
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
 .successful-job { background-color: #5cb85c; }
-.weather        {
-    margin: 0 5px;
+.job-status, .weather {
     height: 30px;
     width: 30px;
 }
+.job-status { margin: 0 5px;        }
+.weather    { margin: 0 13px 0 5px; }
 .job_action   { float: right; }
 .job_action a { color: black; }
 

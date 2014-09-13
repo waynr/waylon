@@ -6,6 +6,7 @@ Waylon.Views.Job = Backbone.View.extend({
 
     template: Handlebars.compile([
         '<td class=jobinfo>',
+            '<img class="job-status"></img>',
             '<img class="weather"></img>',
             '<a href="{{url}}">{{name}}</a>',
             '<div class="job_action">',
@@ -23,6 +24,7 @@ Waylon.Views.Job = Backbone.View.extend({
         if (this.model) {
             this.model.on('change', this.render, this);
         }
+        this.jobStatusIcon   = new Waylon.Views.JobStatusIcon({model: this.model});
         this.weather         = new Waylon.Views.Weather({model: this.model});
         this.progress        = new Waylon.Views.JobProgress({model: this.model});
         this.investigateMenu = new Waylon.Views.InvestigateMenu({model: this.model});
@@ -31,6 +33,7 @@ Waylon.Views.Job = Backbone.View.extend({
     render: function() {
         this.$el.addClass(this.style());
         this.$el.html(this.template(this.model.attributes));
+        this.jobStatusIcon.setElement(this.$('img.job-status')).render();
         this.weather.setElement(this.$('img.weather')).render();
 
         switch (this.model.get('status')) {
