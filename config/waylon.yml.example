@@ -1,33 +1,25 @@
 ---
 config:
-  refresh_interval: 30   # polling interval (in seconds)
-  rebuild_interval: 3600 # page redraw interval (in seconds)
+  refresh_interval: 120  # refresh interval (in seconds)
+  memcached_server: './tmp/memcached.sock'
 views:
-  'Awesome View 1':
-    jenkins1:
-      url: http://jenkins1.example.com
-      username: 'alice'
-      password: 'topsecret'
+  'My View':
+    jenkins-dev:
+      url: https://jenkins-dev.example.com
+      username: 'waylon'
+      password: 'topsecretpw'
       jobs:
         - 'Product A Job 1'
         - 'Product A Job 2'
-    jenkins2:
-      url: http://jenkins2.example.com
-      username: 'bob'
-      password: 'topsecret'
+      views:
+        - 'Product B Stable'
+        - 'Product B Master'
+      nested_views:
+        'Product C':
+          - 'stable'
+          - 'master'
+    jenkins-release:
+      url: http://jenkins-release.example.com
       jobs:
-        - 'Product B Job 1'
-        - 'Product B Job 2'
-  'Awesome View 2':
-    jenkins1:
-      url: http://jenkins1.example.com
-      username: 'alice'
-      password: 'topsecret'
-      jobs:
-        - 'Product A Job 1'
-    jenkins2:
-      url: http://jenkins2.example.com
-      username: 'bob'
-      password: 'topsecret'
-      jobs:
-        - 'Product B Job 1'
+        - 'Product A Packaging'
+        - 'Product A Ship to Repos'

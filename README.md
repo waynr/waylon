@@ -15,41 +15,36 @@ Waylon is a dashboard to display the status of your Jenkins builds.
   * Nirvana mode displays a calming image of Oregon if all your jobs are green
 
 ## Setup
-Currently, v1.2.0 is considered stable and should work. We're still working on
-making this a production-ready app, and plan to release v2.0.0 shortly. v2.0.0
-should also be distributed via Rubygems.
+_Waylon is not currently distributed via Rubygems, but we hope to do so in the
+future._
 
-To clone the repo at v1.2.0:
-
-```
-git clone https://github.com/rji/waylon -b v1.2.0
-```
-
-Development is being done on master, which is also the default branch.
-Generally speaking, anything on master _should work_, even if it does have some
-bugs and broken or missing features. If you want to use the latest and
-greatest, or help with development, this is the place you want to be:
+The easiest way to get up and running with Waylon is to clone the repo from
+GitHub:
 
 ```
 git clone https://github.com/rji/waylon
 ```
 
-Modify `config/waylon.yml` to point to your Jenkins install, and enter
-any job names that you wish to display. For the most part, it's
+Generally, the master branch should work, but it's also where we do most of our
+development. If you want to check out a specific release, try:
+
+```
+git clone https://github.com/rji/waylon -b v1.2.0
+```
+
+Modify `config/waylon.yml` to point to your Jenkins install, and enter any job
+names or Jenkins views that you wish to display. For the most part, it's
 self-explanatory, but here's an example for a few of
 [Puppet Labs](http://www.puppetlabs.com)' FOSS projects:
 
 ```yaml
 ---
 config:
-  refresh_interval: 30   # polling interval (in seconds)
-  rebuild_interval: 3600 # page redraw interval (in seconds)
+  refresh_interval: 120
 views:
   'Puppet Labs - FOSS':
     'pl-jenkins':
       url: 'https://jenkins.puppetlabs.com'
-      username: 'waylon'
-      password: 'topsecret'
       jobs:
         - 'Puppet-Specs-master'
         - 'Facter-Specs-master'
@@ -57,8 +52,8 @@ views:
 ```
 
 ## Deploy
-You can deploy locally, on your LAN, or if you have a public Jenkins instance,
-push the whole thing to Heroku.
+You can deploy locally, on your LAN, or push the whole thing to Heroku if you
+have a public Jenkins instance.
 
 For development, running `rackup` will launch the app with WEBrick on port 9292:
 
@@ -80,7 +75,6 @@ I, [2014-05-15T10:38:08.426279 #41334]  INFO -- : worker=1 spawning...
 ```
 
 ## Memcached
-
 Waylon can use memcached to reduce the number of requests against Jenkins.
 Environments where many users are using Waylon or many jobs are displayed
 should use this caching to deduplicate requests made against the Jenkins API.
@@ -91,14 +85,13 @@ of waylon.yml:
 ```yaml
 ---
 config:
-  refresh_interval: 30   # polling interval (in seconds)
-  rebuild_interval: 3600 # page redraw interval (in seconds)
-  memcached_server: "tmp/memcached.sock"
+  refresh_interval: 120
+  memcached_server: './tmp/memcached.sock'
 ```
 
-The default Procfile will start memcached to listen on the Unix socket "tmp/memcached.sock"
-for connections from Waylon. When run locally you should use Foreman to start up
-both Waylon and memcached.
+The default Procfile will start memcached to listen on the Unix socket
+`./tmp/memcached.sock` for connections from Waylon. When run locally, you
+should use Foreman to start up both Waylon and memcached.
 
 ```
 $ bundle exec foreman start
@@ -116,11 +109,12 @@ $ bundle exec foreman start
 ## Credits
 This application makes use of and/or re-distributes the following open source
 software:
-  * [Sinatra](http://www.sinatrarb.com)
+  * [Backbone.js](http://backbonejs.org/)
   * [Bootstrap](http://getbootstrap.com)
-  * [Handlebars](http://handlebarsjs.com)
-  * [jQuery](http://jquery.com)
+  * [Handlebars.js](http://handlebarsjs.com)
   * [jenkins_api_client](https://github.com/arangamani/jenkins_api_client)
+  * [jQuery](http://jquery.com)
+  * [Sinatra](http://www.sinatrarb.com)
 
 This application also includes the following content that was released under the
 [Creative Commons Attribution (CC BY)](http://creativecommons.org/licenses/)
