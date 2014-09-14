@@ -69,10 +69,9 @@ body {
     padding: 15px 0;
     text-align: center;
 }
-.stats-rollup > h3 {
-    display: inline;
-    margin: 0 1em;
-    padding: 0;
+.stats-rollup .col-md-2 {
+    display: inline-block;
+    float: none;
 }
 .building-job, .failed-job, .successful-job, .unknown-job, .disabled-job {
     color: white;
