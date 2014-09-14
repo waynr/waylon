@@ -2,21 +2,25 @@ var Waylon = Waylon || {};
 Waylon.Views = Waylon.Views || {};
 
 Waylon.Views.Job = Backbone.View.extend({
-    tagName: 'tr',
+    id: 'jobs',
 
     template: Handlebars.compile([
-        '<td class=jobinfo>',
-            '<img class="job-status"></img>',
-            '<img class="weather"></img>',
-            '<a href="{{url}}">{{name}}</a>',
-            '<div class="job_action">',
+        '<div class="row jobinfo">',
+            '<div class="col-md-1 status-icons">',
+                '<img class="job-status"></img>',
+                '<img class="weather"></img>',
+            '</div>',
+            '<div class="col-md-9 job-details">',
+                '<a href="{{url}}">{{name}}</a>',
+            '</div>',
+            '<div class="col-md-2 job_action">',
             '</div>',
             '{{#if progress_pct}}',
-                '<div class="progress">',
+                '<div class="col-md-12 progress">',
                     '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{progress_pct}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_pct}}%" />',
                 '</div>',
             '{{/if}}',
-        '</td>',
+        '</div>',
     ].join("")),
 
     initialize: function(options) {
