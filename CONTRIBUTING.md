@@ -20,7 +20,7 @@ we can have a chance of staying on top of things.
     branch.
   * Make commits of logical units.
 
-## Trivial Changes
+### Trivial Changes
 For trivial changes to comments and documentation, it's not always necessary to
 create a new ticket or topic branch. Please, use your best judgement.
 
