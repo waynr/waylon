@@ -57,7 +57,8 @@ When in doubt, consult the [GitHub Styleguide](https://github.com/styleguide).
 submitted code, and provide a link / reference to the pull request.
 
 # Additional Resources
-* [Bug tracker (GitHub)](https://github.com/rji/waylon/issues)
+* [Issue tracker (GitHub)](https://github.com/rji/waylon/issues)
+* [Workflow management (Waffle)](https://waffle.io/rji/waylon)
 * [General GitHub documentation](https://help.github.com)
 * [GitHub pull request documentation](https://help.github.com/articles/using-pull-requests)
 
