@@ -9,17 +9,15 @@ Waylon.Views.Radiator = Backbone.View.extend({
             '<span class="glyphicon glyphicon-refresh loadingIndicator"></span>',
             '<p>Getting the latest data, just for you.</p>',
         '</div>',
-        '<table id="jobs">',
-            '<tbody>',
-            '</tbody>',
-        '</table>',
+        '<div class="container-fluid" id="jobs">',
+        '</div>',
     ].join(""),
 
     initialize: function(options) {
         this.options = options || {};
         this.view = options.view;
 
-        this.tbody   = this.$("#jobs tbody");
+        this.container = this.$("#jobs");
 
         this.listenTo(Waylon.JobCollection, 'change:status', _.debounce(this.render, 500));
     },
@@ -35,7 +33,7 @@ Waylon.Views.Radiator = Backbone.View.extend({
             return view.render().el;
         });
 
-        this.tbody.html(jobs);
+        this.container.html(jobs);
         return this;
     },
 

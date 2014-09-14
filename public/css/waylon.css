@@ -74,19 +74,6 @@ body {
     margin: 0 1em;
     padding: 0;
 }
-.table thead > tr,
-.table tbody > tr,
-.table tfoot > tr {
-    border: 1px solid white;
-}
-.table thead > tr > th,
-.table tbody > tr > th,
-.table tfoot > tr > th,
-.table thead > tr > td,
-.table tbody > tr > td,
-.table tfoot > tr > td {
-    border: none;
-}
 .building-job, .failed-job, .successful-job, .unknown-job, .disabled-job {
     color: white;
     font-size: 1.5em;
@@ -109,13 +96,22 @@ div .dropdown {
 .building-job   { background-color: #f0ad4e; }
 .failed-job     { background-color: #d9534f; }
 .successful-job { background-color: #5cb85c; }
+
+.jobinfo {
+    border-bottom: 1px solid white;
+    margin: 0;
+    padding: 10px 0 !important;
+}
+.status-icons {
+    padding-right: 0;
+    text-align: center;
+}
 .job-status, .weather {
     height: 30px;
+    margin: 0 5px;
     width: 30px;
 }
-.job-status { margin: 0 5px;        }
-.weather    { margin: 0 13px 0 5px; }
-.job_action   { float: right; }
+.job_action   { text-align: center; }
 .job_action a { color: black; }
 
 .progress, .progress-bar {
@@ -128,12 +124,17 @@ div .dropdown {
     margin-bottom: 0px;
     margin-top: 10px;
     background-color: #f0ad4e;
-    border-radius: 4px;
     -webkit-box-shadow: none;
     box-shadow: none;
+    padding: 0 15px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .progress-bar {
     background-color: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .dropdown-menu span {
