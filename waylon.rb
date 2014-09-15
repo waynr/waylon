@@ -149,33 +149,4 @@ class Waylon < Sinatra::Application
       try { |job| job.describe_build!(desc) }
     end)
   end
-
-  # Investigate a failed build
-  get '/view/:view/:server/:job/:build/investigate' do
-    view_name   = CGI.unescape(params[:view])
-    server_name = CGI.unescape(params[:server])
-    job         = CGI.unescape(params[:job])
-    build       = CGI.unescape(params[:build])
-    postdata    = { 'description' => 'Under investigation' }
-    prefix      = "/job/#{job}/#{build}"
-
-    manadic(Either.attempt_all(self) do
-      try { Waylon::Jenkins.view(gen_config, view_name) }
-      try { |view| view.server(server_name) }
-      try { |server|
-        server.to_config['url']
-        server.client.api_post_request("#{prefix}/submitDescription", postdata)
-        redirect "#{server.to_config['url']}/#{prefix}/"
-      }
-    end)
-
-    @errors = []
-    @errors << "We couldn't find a server in our config for #{server}!"
-
-    @view_name = 'index'
-
-    erb :base do
-      erb :index
-    end
-  end
 end
