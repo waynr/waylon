@@ -137,7 +137,8 @@ class Waylon
 
         def describe_build!(msg, build = nil)
           build  ||= last_build_num
-          prefix   = "/job/#{@name}/#{build}"
+          esc_name = URI.escape(@name)
+          prefix   = "/job/#{esc_name}/#{build}"
           postdata = { 'description' => msg }
 
           client.api_post_request("#{prefix}/submitDescription", postdata)
