@@ -11,7 +11,7 @@ Waylon.Views.StatsRollup = Backbone.View.extend({
         '<div class="row">',
         '{{#if failed}}',
             '<div class="col-md-2">',
-                '<span class="h3"><span id="failed-jobs" class="label label-danger">{{failed}}</span></span>',
+                '<span class="h3">Failed <span id="failed-jobs" class="label label-danger">{{failed}}</span></span>',
             '</div>',
         '{{/if}}',
         '{{#if aborted}}',
