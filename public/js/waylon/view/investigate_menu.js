@@ -59,13 +59,13 @@ Waylon.Views.InvestigateMenu = Backbone.View.extend({
 
         switch(action) {
             case 'investigate':
-                message = "Under investigation";
+                message = "Marked as under investigation";
                 break;
             case 'uninvestigate':
                 message = "";
                 break;
             case 'infra':
-                message = "Marked as infrastructure";
+                message = "Marked as infrastructure issue";
                 break;
             case 'legit':
                 message = "Marked as legitimate failure";

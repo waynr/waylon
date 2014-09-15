@@ -60,7 +60,7 @@ class Waylon
         # @todo don't assume the job has ever been built
         def investigating?
           # Assume the job is in the failed state.
-          !!(description =~ /under investigation/i)
+          !!(description =~ /marked as/i)
         end
 
         # @todo don't assume the job has ever been built
@@ -129,10 +129,6 @@ class Waylon
           end
 
           h
-        end
-
-        def investigate_build!(build = nil)
-          describe_build!("Under investigation", build)
         end
 
         def describe_build!(msg, build = nil)
