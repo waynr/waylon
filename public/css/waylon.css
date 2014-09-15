@@ -22,11 +22,9 @@ body {
 .navbar-default .navbar-nav > li > a {
     background: inherit;
     color: white !important;
-    text-shadow: none;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > li > a:hover {
-    background-image: none !important;
     background-color: #695592 !important;
 }
 
@@ -82,7 +80,7 @@ body {
     color: white;
 }
 
-div .dropdown {
+div.dropdown {
     font-size: 1em;
     font-weight: normal;
     color: black;
@@ -113,21 +111,13 @@ div .dropdown {
 .job_action   { text-align: center; }
 .job_action a { color: black; }
 
-.progress, .progress-bar {
-    background-image: none;
-    background-repeat: no-repeat;
-    filter: none;
-}
 .progress {
     height: 5px;
-    margin-bottom: 0px;
-    margin-top: 10px;
+    margin: 10px auto 0px auto;
     background-color: #f0ad4e;
     -webkit-box-shadow: none;
     box-shadow: none;
     padding: 0 15px;
-    margin-left: auto;
-    margin-right: auto;
 }
 .progress-bar {
     background-color: #fff;
@@ -161,11 +151,9 @@ body.nirvana .navbar-fixed-top {
 body.nirvana .navbar-default .navbar-nav > li > a {
     background: inherit;
     color: white !important;
-    text-shadow: none;
 }
 body.nirvana .navbar-default .navbar-nav > .active > a,
 body.nirvana .navbar-default .navbar-nav > li > a:hover {
-    background-image: none !important;
     background-color: black !important;
 }
 body.nirvana #stats-rollup {
