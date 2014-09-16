@@ -41,6 +41,11 @@ Waylon.Views.JobStatusIcon = Backbone.View.extend({
                 state.alt   = "[success]",
                 state.title = "Last build was successful";
                 break;
+            case "aborted":
+                state.src   = "/img/aborted.png",
+                state.alt   = "[aborted]",
+                state.title = "Last build was aborted";
+                break;
             case "disabled":
                 state.src   = "/img/disabled.png",
                 state.alt   = "[disabled]",
