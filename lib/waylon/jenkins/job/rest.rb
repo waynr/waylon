@@ -66,7 +66,7 @@ class Waylon
             mm, ss = t.divmod(60)
             return "#{mm}m #{ss.floor}s"
           else
-            -1
+            'unknown'
           end
         end
 
