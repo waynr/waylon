@@ -6,12 +6,24 @@ Waylon.Views.JobProgress = Backbone.View.extend({
 
     initialize: function(options) {
         this.options = options || {};
+
+        // Abusing Handlebars for my own personal gain
+        Handlebars.registerHelper('ifEtaIsUnknown', function(eta, options) {
+            if (eta === -1) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        })
     },
 
     template: Handlebars.compile([
         '<img class="job-status" src="/img/eta.png" data-toggle="tooltip" title="Estimated time remaining" alt="ETA" />',
         '&nbsp;',
-        '{{eta}}',
+        '{{#ifEtaIsUnknown eta}}',
+            'unknown',
+        '{{else}}',
+            '{{eta}}',
+        '{{/ifEtaIsUnknown}}',
     ].join("")),
 
     render: function() {
