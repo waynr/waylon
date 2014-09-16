@@ -5,7 +5,7 @@ Waylon.Views.StatsRollup = Backbone.View.extend({
 
     el: '#stats-rollup',
 
-    className: "container-fluid stats-rollup",
+    className: "container stats-rollup",
 
     template: Handlebars.compile([
         '<div class="row">',
