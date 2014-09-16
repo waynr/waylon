@@ -5,7 +5,7 @@ Waylon.Models.Job = Backbone.Model.extend({
     defaults: {
         status: "unknown",
         investigating: false,
-        health: null,
+        health: -1,
     },
 
     initialize: function(attrs) {

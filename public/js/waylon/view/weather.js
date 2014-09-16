@@ -42,6 +42,10 @@ Waylon.Views.Weather = Backbone.View.extend({
                 state.alt   = "[umbrella]",
                 state.title = "2 or more of the last 5 builds failed";
                 break;
+            case -1:
+                state.src   = "/img/unknown.png",
+                state.alt   = "[unknown]",
+                state.title = "No build history";
         }
         return state;
     },
