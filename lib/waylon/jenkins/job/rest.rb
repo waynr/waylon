@@ -37,8 +37,21 @@ class Waylon
           # Note that 'timestamp' available the Jenkins API is returned in ms
           start_time = client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=timestamp')['timestamp'] / 1000.0
           progress_pct = ((Time.now.to_i - start_time) / est_duration) * 100
+
+          # The above math isn't perfect, and Jenkins is probably a bit janky.
+          # Sometimes, we'll get numbers like -3 or 106. This corrects that.
+          case
+          when progress_pct < 0
+            progress_pct = 0
+          when progress_pct > 100
+            progress_pct = 100
+          end
+
           return progress_pct.floor
-        rescue JenkinsApi::Exceptions::InternalServerError
+        rescue JenkinsApi::Exceptions::InternalServerError,
+          JenkinsApi::Exceptions::ApiException
+          # With the math / percentage corrections above, we'll
+          # know that something truly went wrong if we return -1.
           -1
         end
 
