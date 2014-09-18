@@ -118,12 +118,12 @@ software:
 
 This application also includes the following content that was released under the
 [Creative Commons Attribution (CC BY)](http://creativecommons.org/licenses/)
-license:
-  * [Day 105: Oregon Coast Range](https://www.flickr.com/photos/lorenkerns/8651732785) by Loren Kerns
-  * [Mt. Hood, Oregon](https://www.flickr.com/photos/tsaiproject/9943809254) by tsaiproject
-  * [Multnomah Falls](https://www.flickr.com/photos/johnniewalker/12660211844) by John Tregoning
-  * [101_1812](https://www.flickr.com/photos/randall-booth/9060319329) by Randall Booth
+license. Images were cropped to 1920px by 1080px.
   * [Central Oregon Landscape](https://www.flickr.com/photos/ex_magician/3196286183) by Michael McCullough
-  * [Oregon Autumn Part 4](https://www.flickr.com/photos/31246066@N04/4030400633) by Ian Sane
+  * [Day 105: Oregon Coast Range](https://www.flickr.com/photos/lorenkerns/8651732785) by Loren Kerns
+  * [Oregon Coastline -4](https://www.flickr.com/photos/intherough/5397108428) by Wendell
+  * [Mt. Hood, Oregon](https://www.flickr.com/photos/tsaiproject/9943809254) by tsaiproject
   * [Astoria, Oregon](https://www.flickr.com/photos/goingslo/11522920406) by Linda Tanner
+  * [Oregon Autumn Part 4](https://www.flickr.com/photos/31246066@N04/4030400633) by Ian Sane
+  * [Multnomah Falls](https://www.flickr.com/photos/johnniewalker/12660211844) by John Tregoning
 
