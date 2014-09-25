@@ -108,16 +108,21 @@ class Waylon
           end
         end
 
+        def display_name
+          job_details['displayName']
+        end
+
         def url
           job_details['url']
         end
 
         def to_hash
           h = {
-            'name'     => @name,
-            'url'      => url,
-            'built'    => built?,
-            'status'   => status,
+            'name'         => @name,
+            'display_name' => display_name,
+            'url'          => url,
+            'built'        => built?,
+            'status'       => status,
           }
 
           if built?
