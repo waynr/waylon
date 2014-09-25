@@ -55,9 +55,9 @@ Waylon.Models.Job = Backbone.Model.extend({
             return -1;
         } else if (this.priority() < other.priority()) {
             return 1;
-        } else if (this.get('name') < other.get('name')) {
+        } else if (this.get('display_name') < other.get('display_name')) {
             return -1;
-        } else if (this.get('name') > other.get('name')) {
+        } else if (this.get('display_name') > other.get('display_name')) {
             return 1;
         } else {
             return 0;
