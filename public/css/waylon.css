@@ -133,27 +133,30 @@ div.dropdown {
     white-space: nowrap;
 }
 
-/* Nirvana mode */
-body.nirvana {
+/* Nirvana and trouble styles */
+body.nirvana, body.trouble {
     /* background-image set by jQuery */
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
-body.nirvana .navbar-fixed-top {
+body.nirvana .navbar-fixed-top, body.trouble .navbar-fixed-top {
     background: #111;
     opacity: 0.6;
 }
-body.nirvana .navbar-default .navbar-nav > li > a {
+body.nirvana .navbar-default .navbar-nav > li > a,
+body.trouble .navbar-default .navbar-nav > li > a {
     background: inherit;
     color: white !important;
 }
 body.nirvana .navbar-default .navbar-nav > .active > a,
-body.nirvana .navbar-default .navbar-nav > li > a:hover {
+body.nirvana .navbar-default .navbar-nav > li > a:hover,
+body.trouble .navbar-default .navbar-nav > .active > a,
+body.trouble .navbar-default .navbar-nav > li > a:hover {
     background-color: black !important;
 }
-body.nirvana #stats-rollup {
+body.nirvana #stats-rollup, body.trouble #stats-rollup {
     background: #111;
     border-radius: 10px;
     color: white;

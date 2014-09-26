@@ -13,6 +13,8 @@ Waylon is a dashboard to display the status of your Jenkins builds.
   plugin)
   * Multiple views allows for multiple teams to utilize a single Waylon install
   * Nirvana mode displays a calming image of Oregon if all your jobs are green
+  * Trouble mode displays an image of a forest fire if more than
+  `trouble_threshold` jobs are red (default is disabled)
 
 ## Setup
 _Waylon is not currently distributed via Rubygems, but we hope to do so in the

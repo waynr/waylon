@@ -1,6 +1,7 @@
 ---
 config:
   refresh_interval: 120  # refresh interval (in seconds)
+  trouble_threshold: 10  # number of failed jobs before trouble mode kicks in
   memcached_server: './tmp/memcached.sock'
 views:
   'My View':

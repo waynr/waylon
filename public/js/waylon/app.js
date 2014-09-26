@@ -8,6 +8,7 @@ _.extend(Waylon.App.prototype, {
 
     defaults: {
         refresh_interval: 60,
+        trouble_threshold: 0,
     },
 
     initialize: function(options) {
@@ -17,6 +18,10 @@ _.extend(Waylon.App.prototype, {
         this.radiator = new Waylon.Views.Radiator({view: this.options.view});
         this.rollup   = new Waylon.Views.StatsRollup({});
         this.nirvana  = new Waylon.Views.Nirvana({radiator: this.radiator});
+        this.trouble  = new Waylon.Views.Trouble({
+            radiator: this.radiator,
+            trouble_threshold: this.options.trouble_threshold
+        });
     },
 
     run: function() {
