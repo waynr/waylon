@@ -126,4 +126,10 @@ license. Images were cropped to 1920px by 1080px.
   * [Astoria, Oregon](https://www.flickr.com/photos/goingslo/11522920406) by Linda Tanner
   * [Oregon Autumn Part 4](https://www.flickr.com/photos/31246066@N04/4030400633) by Ian Sane
   * [Multnomah Falls](https://www.flickr.com/photos/johnniewalker/12660211844) by John Tregoning
-
+  * [20130817-FS-UNK-0069](https://www.flickr.com/photos/usdagov/9773088691) by U.S. Department of Agriculture
+  * [Wildfire in the Pacific Northwest](https://www.flickr.com/photos/blmoregon/8776249150) by Bureau of Land Management Oregon / Washington
+  * [Wildfire](https://www.flickr.com/photos/npsclimatechange/14503287131) by NPS Climate Change Response
+  * [20130817-FS-UNK-0059](https://www.flickr.com/photos/usdagov/9707378699) by U.S. Department of Agriculture
+  * [20130817-FS-UNK-0027](https://www.flickr.com/photos/usdagov/9626930351) by U.S. Department of Agriculture
+  * [20130701-FS-UNK-0018](https://www.flickr.com/photos/usdagov/9294755604) by U.S. Department of Agriculture
+  * [20130816-FS-UNK-0007](https://www.flickr.com/photos/usdagov/9623969360/) by U.S. Department of Agriculture
