@@ -44,7 +44,7 @@ Waylon.Views.Nirvana = Backbone.View.extend({
         'use strict';
         var date = new Date(),
             day = date.getDay(),
-            result = "/img/img0" + day + ".png";
+            result = "/img/nirvana/img0" + day + ".png";
         return result;
     },
 });
