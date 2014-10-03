@@ -28,7 +28,11 @@ class Waylon
 
           config.nested_view_names.each_pair do |view_name, nested|
             nested.each do |nested_name|
-              names += @client.nested_view.list_nested_jobs(view_name, nested_name)
+              begin
+                names += @client.nested_view.list_nested_jobs(view_name, nested_name)
+              rescue JenkinsApi::Exceptions::NotFound
+                raise Waylon::Errors::NotFound, "Cannot find nested job #{nested_name.inspect} for Jenkins view #{view_name.inspect} on server #{@config.name.inspect}"
+              end
             end
           end
 
