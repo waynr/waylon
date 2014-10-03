@@ -27,7 +27,7 @@ class Waylon
 
       def to_config
         {
-          'name' => @name,
+          'name' => name,
           'servers' => @servers.map(&:url)
         }
       end
