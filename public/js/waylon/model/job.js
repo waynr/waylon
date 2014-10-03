@@ -9,6 +9,17 @@ Waylon.Models.Job = Backbone.Model.extend({
     },
 
     initialize: function(attrs) {
+        /*
+         * When jobs are initialized they may not have the display_name
+         * attribute specified, as that value must be retrieved from the
+         * Jenkins server. To ensure that jobs can be initially rendered with
+         * a name of some kind, we reuse the project job name.
+         *
+         * Since this is occurring on the initial model creation we don't want
+         * to trigger any Backbone events, so we bypass the #set method and
+         * directly modify the attributes object.
+         */
+        this.attributes['display_name'] = (this.attributes['display_name'] || attrs['name']);
         this.query();
     },
 
