@@ -10,6 +10,10 @@
 </head>
 <body>
 
+<% if Waylon::VERSION =~ /BETA/ %>
+    <img class="beta-banner" src="/img/beta-banner.png" alt="BETA" title="" />
+<% end %>
+
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">

@@ -152,6 +152,15 @@ div.dropdown {
     white-space: nowrap;
 }
 
+/* Misc */
+.beta-banner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    z-index: 99999;
+}
+
 /* Nirvana and trouble styles */
 body.nirvana, body.trouble {
     /* background-image set by jQuery */
