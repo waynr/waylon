@@ -33,11 +33,17 @@
 
 
 <div class="container-fluid">
+    <br />
+    <%= yield %>
+</div>
 
-<br />
-
-<%= yield %>
-
+<div class="footer">
+    <div class="container">
+        <p class="text-muted">
+        You are using <a href="https://github.com/rji/waylon">Waylon</a>
+        <%= "#{Waylon::VERSION}" %>.
+        </p>
+    </div>
 </div>
 
 </body>
