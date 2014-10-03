@@ -15,15 +15,21 @@ Waylon.Views.Trouble = Backbone.View.extend({
     check: function() {
         var ok = true;
 
-        var failed    = parseInt(Waylon.JobCollection.count('failure'));
-        var threshold = parseInt(this.trouble_threshold);
+        var successful = parseInt(Waylon.JobCollection.count('success'));
+        var failed     = parseInt(Waylon.JobCollection.count('failure'));
+        var total      = parseInt(Waylon.JobCollection.size());
+        var threshold  = parseInt(this.trouble_threshold);
 
-        // Trouble mode is disabled if threshold is 0 (default)
-        if (threshold > 0) {
-            if (failed >= threshold) {
-                this.begin();
-            } else {
-                this.end();
+        if (successful === total) {
+            // Don't do anything, this is Nirvana mode
+        } else {
+            // Trouble mode is disabled if threshold is 0 (default)
+            if (threshold > 0) {
+                if (failed >= threshold) {
+                    this.begin();
+                } else {
+                    this.end();
+                }
             }
         }
     },
