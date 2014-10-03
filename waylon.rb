@@ -12,6 +12,7 @@ $LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
 class Waylon < Sinatra::Application
   require 'waylon/config'
   require 'waylon/jenkins'
+  require 'waylon/version'
   include Deterministic
 
   helpers do

@@ -1,6 +1,10 @@
+$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
+
+require 'waylon/version'
+
 Gem::Specification.new do |s|
   s.name          = 'waylon'
-  s.version       = '0.0.0'
+  s.version       = Waylon::VERSION
   s.date          = '2014-09-01'
   s.authors       = ['Roger Ignazio']
   s.email         = ['me@rogerignazio.com']
