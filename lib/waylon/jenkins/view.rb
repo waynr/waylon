@@ -28,7 +28,7 @@ class Waylon
       def to_config
         {
           'name' => name,
-          'servers' => @servers.map(&:url)
+          'servers' => Hash[(@servers.map { |s| [s.name, s.url] })]
         }
       end
     end
