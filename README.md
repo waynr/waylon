@@ -108,6 +108,7 @@ $ bundle exec foreman start
 ## Screenshots
 ![Waylon radiator screenshot (builds)](http://rogerignazio.com/projects/waylon/waylon-screenshot-builds.png)
 ![Waylon radiator screenshot (nirvana)](http://rogerignazio.com/projects/waylon/waylon-screenshot-nirvana.png)
+![Waylon radiator screenshot (trouble)](http://rogerignazio.com/projects/waylon/waylon-screenshot-trouble.png)
 
 ## Credits
 This application makes use of and/or re-distributes the following open source
