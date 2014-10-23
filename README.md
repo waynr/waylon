@@ -1,11 +1,12 @@
-# waylon
+# Waylon
 Waylon is a dashboard to display the status of your Jenkins builds.
 
   * Project page: http://rogerignazio.com/projects/waylon
   * Source code: https://github.com/rji/waylon
 
 ## Overview
-  * Displays only the desired jobs from one or more Jenkins instances
+  * Displays individual jobs, or all of the jobs in a view (or nested view)
+  for one or more Jenkins instances
   * Displays build stability for each job (sunny, cloudy, raining)
   * Groups jobs by building, failed, and successful, and displays job counts for each
   * Mark a failed build as 'under investigation' (requires the
