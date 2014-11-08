@@ -38,6 +38,12 @@ _.extend(Waylon.App.prototype, {
                 var radiator = options.context.radiator;
                 radiator.doneLoading();
             },
+            error: function(xhr, textStatus, err) {
+                var radiator = err.context.radiator;
+                radiator.doneLoading();
+                this.alert = new Waylon.Models.Alert({"level": "danger", "title": "Wharrbargl!", "content": "Couldn't query for any jobs!"});
+                Waylon.AlertCollection.add(this.alert);
+            },
         });
     },
 
