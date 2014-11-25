@@ -24,12 +24,20 @@ Waylon.Models.Job = Backbone.Model.extend({
     },
 
     query: function() {
+        if (this.alert) {
+            Waylon.AlertCollection.remove(this.alert);
+            this.alert = null;
+        }
         $.ajax({
             context: this,
             url: this.baseurl() + ".json",
             dataType: "json",
             success: function(json) {
                 this._reset(json);
+            },
+            error: function(xhr, textStatus, err) {
+                this.alert = new Waylon.Models.Alert({"level": "warning", "title": "Khaaan!", "content": "Couldn't query job '" + this.get('display_name') + "' - " + err});
+                Waylon.AlertCollection.add(this.alert);
             },
         });
     },

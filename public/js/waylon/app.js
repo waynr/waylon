@@ -18,6 +18,7 @@ _.extend(Waylon.App.prototype, {
         this.radiator = new Waylon.Views.Radiator({view: this.options.view});
         this.rollup   = new Waylon.Views.StatsRollup({});
         this.nirvana  = new Waylon.Views.Nirvana({radiator: this.radiator});
+        this.alerts   = new Waylon.Views.AlertList({});
         this.trouble  = new Waylon.Views.Trouble({
             radiator: this.radiator,
             trouble_threshold: this.options.trouble_threshold
@@ -36,6 +37,12 @@ _.extend(Waylon.App.prototype, {
             success: function(model, response, options) {
                 var radiator = options.context.radiator;
                 radiator.doneLoading();
+            },
+            error: function(xhr, textStatus, err) {
+                var radiator = err.context.radiator;
+                radiator.doneLoading();
+                this.alert = new Waylon.Models.Alert({"level": "danger", "title": "Wharrbargl!", "content": "Couldn't query for any jobs!"});
+                Waylon.AlertCollection.add(this.alert);
             },
         });
     },
