@@ -41,7 +41,7 @@ _.extend(Waylon.App.prototype, {
             error: function(xhr, textStatus, err) {
                 var radiator = err.context.radiator;
                 radiator.doneLoading();
-                this.alert = new Waylon.Models.Alert({"level": "danger", "title": "Wharrbargl!", "content": "Couldn't query for any jobs!"});
+                this.alert = new Waylon.Models.Alert({"level": "danger", "title": "Oh snap!", "content": "Couldn't query Jenkins."});
                 Waylon.AlertCollection.add(this.alert);
             },
         });

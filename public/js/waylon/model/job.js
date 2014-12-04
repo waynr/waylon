@@ -36,7 +36,7 @@ Waylon.Models.Job = Backbone.Model.extend({
                 this._reset(json);
             },
             error: function(xhr, textStatus, err) {
-                this.alert = new Waylon.Models.Alert({"level": "warning", "title": "Khaaan!", "content": "Couldn't query job '" + this.get('display_name') + "' - " + err});
+                this.alert = new Waylon.Models.Alert({"level": "warning", "title": "Best check yo'self.", "content": "Couldn't get info for job: '" + this.get('display_name') + "' - " + err});
                 Waylon.AlertCollection.add(this.alert);
             },
         });
