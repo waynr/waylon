@@ -36,6 +36,7 @@ Waylon.Views.InvestigateMenu = Backbone.View.extend({
                 '<li class="divider" />',
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="investigate">Mark as under investigation</a></li>',
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="infra">Mark as infrastructure issue</a></li>',
+                '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="transient">Mark as transient failure</a></li>',
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="legit">Mark as legitimate failure</a></li>',
                 '<li class="divider" />',
                 '<li role="presentation"><a role="menuitem" tabindex="-1" href="#" action="uninvestigate">Mark as not under investigation</a></li>',
@@ -66,6 +67,9 @@ Waylon.Views.InvestigateMenu = Backbone.View.extend({
                 break;
             case 'infra':
                 message = "Marked as infrastructure issue";
+                break;
+            case 'transient':
+                message = "Marked as transient failure";
                 break;
             case 'legit':
                 message = "Marked as legitimate failure";
