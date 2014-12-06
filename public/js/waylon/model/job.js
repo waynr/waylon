@@ -86,22 +86,22 @@ Waylon.Models.Job = Backbone.Model.extend({
     priority: function() {
         switch (this.get('status')) {
             case "failure":
-                return 10;
+                return 100;
             case "aborted":
-                return 9;
+                return 90;
             case "disabled":
-                return 8;
+                return 70;
             case "not_run":
-                return 7;
+                return 60;
             case "unknown":
-                return 6;
+                return 50;
             case "running":
-                return 2;
+                return 80;
             case "success":
-                return 1;
+                return 10;
             default:
                 // Ensure that jobs with an unhandled status are highly visible
-                return 3;
+                return 30;
         }
     },
 });
