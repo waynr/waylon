@@ -31,7 +31,7 @@ class Waylon
 
         def progress_pct
           # Note that 'timestamp' available the Jenkins API is returned in ms
-          start_time = client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=timestamp')['timestamp'] / 1000.0
+          start_time   = client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth = 1&tree = timestamp')['timestamp'] / 1000.0
           progress_pct = ((Time.now.to_i - start_time) / est_duration) * 100
 
           # The above math isn't perfect, and Jenkins is probably a bit janky.
@@ -56,7 +56,7 @@ class Waylon
           # after it has completed. Using estimatedDuration and the
           # executor progress (in percentage), we can calculate the ETA.
           if progress_pct != -1 then
-            t = (est_duration - (est_duration * (progress_pct / 100.0)))
+            t      = (est_duration - (est_duration * (progress_pct / 100.0)))
             mm, ss = t.divmod(60)
             return "#{mm}m #{ss.floor}s"
           else

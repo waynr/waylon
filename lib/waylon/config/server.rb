@@ -34,13 +34,13 @@ class Waylon
       end
 
       def initialize(name, url, username, password)
-        @name = name
-        @url = url
+        @name     = name
+        @url      = url
         @username = username
         @password = password
 
-        @job_names = []
-        @view_names = []
+        @job_names         = []
+        @view_names        = []
         @nested_view_names = {}
       end
 

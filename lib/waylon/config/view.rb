@@ -19,7 +19,7 @@ class Waylon
       end
 
       def initialize(name)
-        @name = name
+        @name    = name
         @servers = []
       end
     end

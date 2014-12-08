@@ -3,7 +3,7 @@ class Waylon
     class View
       attr_accessor :servers
       def initialize(config)
-        @config = config
+        @config  = config
         @servers = []
       end
 
@@ -27,7 +27,7 @@ class Waylon
 
       def to_config
         {
-          'name' => name,
+          'name'    => name,
           'servers' => Hash[(@servers.map { |s| [s.name, s.url] })]
         }
       end

@@ -8,7 +8,7 @@ class Waylon
       attr_reader :server
 
       def initialize(name, server)
-        @name = name
+        @name   = name
         @server = server
       end
     end
