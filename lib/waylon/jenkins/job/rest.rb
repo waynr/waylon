@@ -24,15 +24,11 @@ class Waylon
           end
         end
 
-        # @todo don't assume the job has ever been built
-        # @todo don't assume the job is running
         def est_duration
-          # estimatedDuration is returned in ms and here we convert it to seconds
+          # estimatedDuration is returned in ms; here we convert it to seconds
           client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=estimatedDuration')['estimatedDuration'] / 1000
         end
 
-        # @todo don't assume the job has ever been built
-        # @todo don't assume the job is running
         def progress_pct
           # Note that 'timestamp' available the Jenkins API is returned in ms
           start_time = client.api_get_request("/job/#{@name}/lastBuild", nil, '/api/json?depth=1&tree=timestamp')['timestamp'] / 1000.0
@@ -55,8 +51,6 @@ class Waylon
           -1
         end
 
-        # @todo don't assume the job has ever been built
-        # @todo don't assume the job is running
         def eta
           # A build's 'duration' in the Jenkins API is only available
           # after it has completed. Using estimatedDuration and the
@@ -70,13 +64,11 @@ class Waylon
           end
         end
 
-        # @todo don't assume the job has ever been built
         def investigating?
           # Assume the job is in the failed state.
           !!(description =~ /marked as/i)
         end
 
-        # @todo don't assume the job has ever been built
         def description
           @client.job.get_build_details(@name, last_build_num)['description']
         end
@@ -99,12 +91,10 @@ class Waylon
           @disabled = job_details['color'] == "disabled"
         end
 
-        # @todo don't assume the job has ever been built
         def last_build_num
           job_details['lastBuild']['number']
         end
 
-        # @todo don't assume the job has ever been built
         def health
           reports = job_details['healthReport']
           if (reports && !reports.empty?)

@@ -1,8 +1,8 @@
 module JenkinsApi
   class Client
-    # @todo Try to reduce calls to the Jenkins API by invoking calls and
-    #   checking the HTTP status code instead of duplicating each API call to
-    #   confirm existence.
+    # TODO: Try to reduce calls to the Jenkins API by invoking calls and
+    # TODO: checking the HTTP status code instead of duplicating each API call
+    # TODO: to confirm existence.
     class NestedView
       include JenkinsApi::UriHelper
 
