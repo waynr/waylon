@@ -8,7 +8,7 @@ Waylon.Views.Alert = Backbone.View.extend({
     className: "row",
 
     template: Handlebars.compile([
-        '<div class="alert {{alertClass}} col-md-6 col-md-offset-3">',
+        '<div class="alert {{alertClass}}">',
             '<strong>{{title}}&nbsp;</strong>',
             '{{content}}',
             '<a href="#" class="close" data-dismiss="alert">&times;</a>',
