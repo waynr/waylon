@@ -19,7 +19,7 @@ Waylon.Models.Job = Backbone.Model.extend({
          * to trigger any Backbone events, so we bypass the #set method and
          * directly modify the attributes object.
          */
-        this.attributes['display_name'] = (this.attributes['display_name'] || attrs['name']);
+        this.attributes.display_name = (this.attributes.display_name || attrs.name);
         this.query();
     },
 

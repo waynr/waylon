@@ -5,7 +5,7 @@ Waylon.Views.Weather = Backbone.View.extend({
     el: 'img',
 
     attributes: function() {
-        return { 'data-toggle': 'tooltip' }
+        return { 'data-toggle': 'tooltip' };
     },
 
     initialize: function(options) {
