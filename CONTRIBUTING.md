@@ -18,7 +18,7 @@ we can have a chance of staying on top of things.
   `git checkout -b my-contribution master`.
     * Except for trivial changes, please avoid working directly on the `master`
     branch.
-  * Make commits of logical units.
+* Make commits of logical units.
 
 ### Trivial Changes
 For trivial changes to comments and documentation, it's not always necessary to
