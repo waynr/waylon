@@ -32,7 +32,7 @@ Generally, the master branch should work, but it's also where we do most of our
 development. If you want to check out a specific release, try:
 
 ```
-git clone https://github.com/rji/waylon -b v1.2.0
+git clone https://github.com/rji/waylon -b v2.0.0
 ```
 
 Modify `config/waylon.yml` to point to your Jenkins install, and enter any job
@@ -109,6 +109,12 @@ $ bundle exec foreman start
 ![Waylon radiator screenshot (builds)](http://rogerignazio.com/projects/waylon/waylon-screenshot-builds.png)
 ![Waylon radiator screenshot (nirvana)](http://rogerignazio.com/projects/waylon/waylon-screenshot-nirvana.png)
 ![Waylon radiator screenshot (trouble)](http://rogerignazio.com/projects/waylon/waylon-screenshot-trouble.png)
+
+## Author
+Roger Ignazio (me@rogerignazio.com)
+
+## License
+Apache License, Version 2.0
 
 ## Credits
 This application makes use of and/or re-distributes the following open source
