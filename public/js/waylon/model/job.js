@@ -74,9 +74,9 @@ Waylon.Models.Job = Backbone.Model.extend({
             return -1;
         } else if (this.priority() < other.priority()) {
             return 1;
-        } else if (this.get('display_name') < other.get('display_name')) {
+        } else if (this.get('last_build_timestamp') > other.get('last_build_timestamp')) {
             return -1;
-        } else if (this.get('display_name') > other.get('display_name')) {
+        } else if (this.get('last_build_timestamp') < other.get('last_build_timestamp')) {
             return 1;
         } else {
             return 0;
@@ -90,18 +90,18 @@ Waylon.Models.Job = Backbone.Model.extend({
             case "aborted":
                 return 90;
             case "disabled":
-                return 70;
+                return 05;
             case "not_run":
-                return 60;
+                return 10;
             case "unknown":
                 return 50;
             case "running":
                 return 80;
             case "success":
-                return 10;
+                return 60;
             default:
                 // Ensure that jobs with an unhandled status are highly visible
-                return 30;
+                return 70;
         }
     },
 });
